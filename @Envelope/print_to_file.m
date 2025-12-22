@@ -1,10 +1,10 @@
-function obj = print_to_file(obj, path)
+function self = print_to_file(self, path)
     % % Prepare the folders
     fp_results = fullfile(path, "results", "per_specimen", "stability_envelope");
-    states = obj.states;
-    signals = obj.signals;
-    directions = obj.directions;
-    specimens = obj.specimens;
+    states = self.states;
+    signals = self.signals;
+    directions = self.directions;
+    specimens = self.specimens;
     for sp = 1:numel(specimens)
         specimen = specimens(sp);
         for st = 1:numel(states)
@@ -17,7 +17,7 @@ function obj = print_to_file(obj, path)
                 for d = 1:numel(directions)
                     direction = directions(d);
 
-                    datum = obj.Data.(specimen).(state).(direction).(signal);
+                    datum = self.Data.(specimen).(state).(direction).(signal);
 
                     writetable(datum, strcat(fullfile(filepath, direction), '.csv'));
                 end

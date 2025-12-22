@@ -1,18 +1,18 @@
-function spmi = spm(obj)
-    states = obj.States;
-    directions = obj.Directions;
-    signals = obj.Signals;
+function spmi = spm(self)
+    states = self.States;
+    directions = self.Directions;
+    signals = self.Signals;
 
     for sg = 1:numel(signals)
         signal = signals(sg);
         for d = 1:numel(directions)
             direction = directions(d);
-            x = obj.Data.(states(1)).(signal).(direction).mean;
+            x = self.Data.(states(1)).(signal).(direction).mean;
             val = nan(height(x), numel(states), width(x));
 
             for st = 1:numel(states)
                 state = states(st);
-                datum = obj.Data.(state).(signal).(direction).mean;
+                datum = self.Data.(state).(signal).(direction).mean;
                 val(:, st, :) = table2array(datum);
             end
 

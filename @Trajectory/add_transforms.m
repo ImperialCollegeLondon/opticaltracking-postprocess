@@ -1,3 +1,3 @@
-function obj = add_transforms(obj, label, transforms)
-    obj.Transform.(label) = transforms;
+function self = add_transforms(self, label, transforms)
+    self.Transform.(label) = transforms;
 end

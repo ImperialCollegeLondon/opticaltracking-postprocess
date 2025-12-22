@@ -8,29 +8,29 @@ classdef Plot
     end
 
     methods
-        function obj = Plot(envelope,orientations)
+        function self = Plot(envelope,orientations)
             arguments
                 envelope EnvelopeAverage
                 orientations = [];
             end
-            obj.States = envelope.States;
-            obj.Signals = envelope.Signals;
-            obj.Orientations = envelope.Directions;
-            [obj.LineHandles, obj.FigureHandles] = create_plot(envelope, orientations);
+            self.States = envelope.States;
+            self.Signals = envelope.Signals;
+            self.Orientations = envelope.Directions;
+            [self.LineHandles, self.FigureHandles] = create_plot(envelope, orientations);
         end
     end
 end
 
-function [line_handles, figure_handles] = create_plot(obj, orientations)
-    if isempty(obj.Data)
+function [line_handles, figure_handles] = create_plot(self, orientations)
+    if isempty(self.Data)
         line_handles = plot(0);
         return
     end
 
-    states = obj.States;
-    directions = obj.Directions; %anterior-posterior
+    states = self.States;
+    directions = self.Directions; %anterior-posterior
     colours = lines(numel(states));
-    signals = obj.Signals;
+    signals = self.Signals;
     %orientations = degree of freedom
 
     for sg = 1:numel(signals)
@@ -40,7 +40,7 @@ function [line_handles, figure_handles] = create_plot(obj, orientations)
             state = states(s);
             colour = colours(s, :);
 
-            plots(s).(signal) = gen_plots(obj.Data.(state).(signal), directions, colour, s, orientations);
+            plots(s).(signal) = gen_plots(self.Data.(state).(signal), directions, colour, s, orientations);
 
         end
         sgtitle(replace(signals(sg), '_', ' '));

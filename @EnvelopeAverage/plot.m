@@ -1,27 +1,27 @@
-function o = plot(obj, orientations)
+function o = plot(self, orientations)
     arguments
-        obj
+        self
         orientations = [];
     end
     orientations = string(orientations);
-    o = Plot(obj, orientations);
+    o = Plot(self, orientations);
 end
-% function o = plot(obj, orientations)
+% function o = plot(self, orientations)
 %     if nargin > 1
 %         orient = orientations;
 %     else
 %         orient = [];
 %     end
 %
-%     if isempty(obj.Data)
+%     if isempty(self.Data)
 %         o = plot(0);
 %         return
 %     end
 %
-%     states = obj.States;
-%     directions = obj.Directions;
+%     states = self.States;
+%     directions = self.Directions;
 %     colours = lines(numel(states));
-%     signals = obj.Signals;
+%     signals = self.Signals;
 %
 %     for sg = 1:numel(signals)
 %         f(sg) = figure;
@@ -30,7 +30,7 @@ end
 %             state = states(s);
 %             colour = colours(s, :);
 %
-%             plots(s, sg) = gen_plots(obj.Data.(state).(signal), directions, colour, s, orient);
+%             plots(s, sg) = gen_plots(self.Data.(state).(signal), directions, colour, s, orient);
 %
 %         end
 %         sgtitle(replace(signals(sg), '_', ' '));

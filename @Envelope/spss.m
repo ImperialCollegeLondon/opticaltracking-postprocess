@@ -1,7 +1,7 @@
-function o = spss(obj, interval)
+function o = spss(self, interval)
     arguments
-        obj
+        self
         interval = 10;
     end
-    o = SPSS(obj, interval);
+    o = SPSS(self, interval);
 end

@@ -1,7 +1,7 @@
-function obj = add_data(obj, label, data)
+function self = add_data(self, label, data)
     headers = data.Properties.VariableNames;
     if ~any(contains(headers, 'flexion'))
         error("Data table must contain field 'flexion'.")
     end
-    obj.Data.(label) = data;
+    self.Data.(label) = data;
 end

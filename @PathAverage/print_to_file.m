@@ -1,8 +1,8 @@
-function obj = print_to_file(obj, path)
+function self = print_to_file(self, path)
     % % Prepare the folders
     fp_results = fullfile(path, "results", "average", "neutral_path");
-    states = obj.States;
-    signals = obj.Signals;
+    states = self.States;
+    signals = self.Signals;
     for st = 1:numel(states)
         state = states(st);
         for sg = 1:numel(signals)
@@ -11,7 +11,7 @@ function obj = print_to_file(obj, path)
             filepath = fullfile(fp_results, signal);
             mkdir(filepath);
 
-            datum = obj.Data.(state).(signal);
+            datum = self.Data.(state).(signal);
             headers = datum.mean.Properties.VariableNames;
 
             t_mean = datum.mean;

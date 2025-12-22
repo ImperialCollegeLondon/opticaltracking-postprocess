@@ -1,5 +1,5 @@
-function o = filter_state(obj, state)
+function o = filter_state(self, state)
     error("Not yet implemented");
-    mask = strcmpi(obj.States, state);
-    o = obj(mask, :);
+    mask = strcmpi(self.States, state);
+    o = self(mask, :);
 end

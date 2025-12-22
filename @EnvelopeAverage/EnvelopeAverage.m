@@ -6,7 +6,7 @@ classdef EnvelopeAverage
         Signals
     end
     methods
-        function obj = EnvelopeAverage(envelopes)
+        function self = EnvelopeAverage(envelopes)
             specimens = envelopes.specimens;
             directions = envelopes.directions;
             states = envelopes.states;
@@ -32,14 +32,14 @@ classdef EnvelopeAverage
                         avg = mean(stacked, 3);
                         stdev = std(stacked, 0, 3);
 
-                        obj.Data.(state).(signal).(direction).mean = array2table(avg, "VariableNames", headers);
-                        obj.Data.(state).(signal).(direction).std = array2table(stdev, "VariableNames", headers);
+                        self.Data.(state).(signal).(direction).mean = array2table(avg, "VariableNames", headers);
+                        self.Data.(state).(signal).(direction).std = array2table(stdev, "VariableNames", headers);
                     end
                 end
             end
-            obj.States = states;
-            obj.Directions = directions;
-            obj.Signals = string(signals);
+            self.States = states;
+            self.Directions = directions;
+            self.Signals = string(signals);
         end
     end
 end

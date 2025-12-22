@@ -4,7 +4,7 @@ classdef SPSS
         Data
     end
     methods
-        function obj = SPSS(envelope, interval)
+        function self = SPSS(envelope, interval)
             arguments
                 envelope Envelope
                 interval
@@ -41,32 +41,32 @@ classdef SPSS
                     end
                     for h = 1:numel(headers)
                         header = headers{h};
-                        obj.Data.(signal).(direction).(header) = all_specimens(:, :, h);
+                        self.Data.(signal).(direction).(header) = all_specimens(:, :, h);
                     end
 
                     % Precompute sizes
                     nA = numel(ang);
                     nS = numel(states);
 
-                    obj.Metadata.(signal).(direction).states.groups = repmat((0:nS-1)', nA, 1)';
-                    obj.Metadata.(signal).(direction).states.values = repmat(states(:), nA, 1)';
-                    obj.Metadata.(signal).(direction).angles.groups = repelem((0:nA-1)', nS)';
-                    obj.Metadata.(signal).(direction).angles.values = repelem((ang(:) - 1), nS)';
+                    self.Metadata.(signal).(direction).states.groups = repmat((0:nS-1)', nA, 1)';
+                    self.Metadata.(signal).(direction).states.values = repmat(states(:), nA, 1)';
+                    self.Metadata.(signal).(direction).angles.groups = repelem((0:nA-1)', nS)';
+                    self.Metadata.(signal).(direction).angles.values = repelem((ang(:) - 1), nS)';
                 end
             end
         end
 
-        function print_to_file(obj, root)
-            signals = fields(obj.Data);
+        function print_to_file(self, root)
+            signals = fields(self.Data);
             for s = 1:numel(signals)
                 signal = signals{s};
-                directions = fields(obj.Data.(signal));
+                directions = fields(self.Data.(signal));
                 for d = 1:numel(directions)
                     direction = directions{d};
-                    headers = fields(obj.Data.(signal).(direction));
+                    headers = fields(self.Data.(signal).(direction));
                     for h = 1:numel(headers)
                         header = headers{h};
-                        data = obj.Data.(signal).(direction).(header);
+                        data = self.Data.(signal).(direction).(header);
 
                         path = fullfile(root, 'results', 'spss', signal, direction);
                         if ~exist(path, "dir")
@@ -75,7 +75,7 @@ classdef SPSS
 
                         writematrix(data, fullfile(path, [header, '.csv']));
                     end
-                    metadata = obj.Metadata.(signal).(direction);
+                    metadata = self.Metadata.(signal).(direction);
                     path_metadata = fullfile(root, 'results', 'spss_metadata', signal, direction);
                     if ~exist(path_metadata, "dir")
                         mkdir(path_metadata)

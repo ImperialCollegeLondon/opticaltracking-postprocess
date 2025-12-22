@@ -10,7 +10,7 @@ classdef Envelope
     % end
 
     methods % Constructor
-        function obj = Envelope(trajectory, envelope, native_neutral, specimen_states)
+        function self = Envelope(trajectory, envelope, native_neutral, specimen_states)
             % envelope is a matrix where each row constitutes the extrema of the envelope, e.g. ['ant', 'post'; 'int', 'ext'];
             arguments
                 trajectory Trajectory
@@ -21,8 +21,8 @@ classdef Envelope
             end
 
             specimen_list = string([trajectory.SpecimenName]);
-            obj.SpecimenName = unique(specimen_list); % Should only support one at a time?
-            names = unique(obj.SpecimenName);
+            self.SpecimenName = unique(specimen_list); % Should only support one at a time?
+            names = unique(self.SpecimenName);
             states = '';
             directions = '';
             for n = 1:numel(names)
@@ -35,44 +35,44 @@ classdef Envelope
             is_neutral = contains([trajectory.LoadingCondition], "neutral", "IgnoreCase", true);
             neutral = trajectory(is_neutral);
 
-            obj.Signals = fieldnames(specimens.(names(1)).(states{1}).(directions{1}));
-            obj.States = setdiff(unique(states), ["UKA_w_pACL", "Unoptimised"]); % Remove
-            obj.Directions = unique(directions);
-            % obj.Data = subtract_native(specimens, native_neutral);
-            obj.Data = subtract_neutral(specimens, neutral);
+            self.Signals = fieldnames(specimens.(names(1)).(states{1}).(directions{1}));
+            self.States = setdiff(unique(states), ["UKA_w_pACL", "Unoptimised"]); % Remove
+            self.Directions = unique(directions);
+            % self.Data = subtract_native(specimens, native_neutral);
+            self.Data = subtract_neutral(specimens, neutral);
         end
     end
 
     methods
-        function o = average(obj)
-            o = EnvelopeAverage(obj);
+        function o = average(self)
+            o = EnvelopeAverage(self);
         end
 
-        function o = exclude_specimen_exact(obj, specimen)
-            o = obj;
+        function o = exclude_specimen_exact(self, specimen)
+            o = self;
             specimens_remaining = setdiff(o.specimens, specimen);
             o.SpecimenName = specimens_remaining;
         end
-        function o = exclude_specimen(obj, specimen)
-            o = obj;
+        function o = exclude_specimen(self, specimen)
+            o = self;
             mask = contains(o.specimens, specimen);
             o.SpecimenName = o.SpecimenName(~mask);
         end
-        function o = filter_signal(obj, signal)
-            obj.Signals = obj.Signals(contains(obj.Signals, signal));
-            o = obj;
+        function o = filter_signal(self, signal)
+            self.Signals = self.Signals(contains(self.Signals, signal));
+            o = self;
         end
-        function o = directions(obj)
-            o = string(obj.Directions);
+        function o = directions(self)
+            o = string(self.Directions);
         end
-        function o = states(obj)
-            o = string(obj.States);
+        function o = states(self)
+            o = string(self.States);
         end
-        function o = specimens(obj)
-            o = string(unique(obj.SpecimenName));
+        function o = specimens(self)
+            o = string(unique(self.SpecimenName));
         end
-        function o = signals(obj)
-            o = string(unique(obj.Signals));
+        function o = signals(self)
+            o = string(unique(self.Signals));
         end
     end
 end

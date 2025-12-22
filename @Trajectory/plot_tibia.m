@@ -1,11 +1,11 @@
-function plot_tibia(obj)
+function plot_tibia(self)
     range = 1:10:90;
     scale = 1;
-    is_neutral = contains([obj.LoadingCondition], "neutral", "IgnoreCase", true);
-    is_native = contains([obj.SpecimenState], ["native", "uka_w_acl"], "IgnoreCase", true);
+    is_neutral = contains([self.LoadingCondition], "neutral", "IgnoreCase", true);
+    is_native = contains([self.SpecimenState], ["native", "uka_w_acl"], "IgnoreCase", true);
     is_native_neutral = is_neutral & is_native;
 
-    filtered = obj(is_native_neutral);
+    filtered = self(is_native_neutral);
     specimens = unique([filtered.SpecimenName]);
     states = unique([filtered.SpecimenState]);
 
