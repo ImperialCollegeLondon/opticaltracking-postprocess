@@ -1,16 +1,16 @@
-function envelope = stability_envelope(obj, envelopes, native, neutral)
+function envelope = stability_envelope(self, envelopes, native, neutral)
     arguments
-        obj
+        self
         envelopes
         native = "Native"
         neutral = "Neutral"
     end
 
-    % names = unique([obj.SpecimenName]);
-    states = unique([obj.SpecimenState]);
+    % names = unique([self.SpecimenName]);
+    states = unique([self.SpecimenState]);
 
-    is_native = contains([obj.SpecimenState], native, "IgnoreCase", true);
-    native = obj(is_native);
+    is_native = contains([self.SpecimenState], native, "IgnoreCase", true);
+    native = self(is_native);
     is_passive_flex = contains([native.LoadingCondition], neutral, "IgnoreCase", true);
     native_passive_flex = native(is_passive_flex);
 
@@ -18,5 +18,5 @@ function envelope = stability_envelope(obj, envelopes, native, neutral)
         error("Native Neutral flexion was not detected")
     end
 
-    envelope = Envelope(obj, envelopes, native_passive_flex, states);
+    envelope = Envelope(self, envelopes, native_passive_flex, states);
 end

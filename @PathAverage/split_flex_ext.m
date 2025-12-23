@@ -1,16 +1,16 @@
-function [flex, ext] = split_flex_ext(obj)
-    directions = obj.Directions;
-    states = obj.States;
-    signals = obj.Signals;
+function [flex, ext] = split_flex_ext(self)
+    directions = self.Directions;
+    states = self.States;
+    signals = self.Signals;
 
-    flex = obj;
-    ext = obj;
+    flex = self;
+    ext = self;
 
     for st = 1:numel(states)
         state = states(st);
         for sg = 1:numel(signals)
             signal = signals(sg);
-            datum = obj.Data.(state).(signal);
+            datum = self.Data.(state).(signal);
             n = round(height(datum.mean)/2);
 
             flex.Data.(state).(signal).mean = datum.mean(1:n, :);

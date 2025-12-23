@@ -1,8 +1,8 @@
-function spm = spm(obj)
-    states = obj.states;
-    directions = obj.directions;
-    specimens = obj.specimens;
-    signals = obj.signals;
-    data = obj.Data;
+function spm = spm(self)
+    states = self.states;
+    directions = self.directions;
+    specimens = self.specimens;
+    signals = self.signals;
+    data = self.Data;
     spm = SPM(states, directions, specimens, signals, data);
 end

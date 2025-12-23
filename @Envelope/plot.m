@@ -1,15 +1,15 @@
-function p = plot(obj)
+function p = plot(self)
 
-    if isempty(obj.Data)
+    if isempty(self.Data)
         p = plot(0);
         return
     end
 
-    states = string(obj.states);
-    specimens = string(obj.specimens);
-    n_colours = length(fieldnames(obj.Data.(specimens(1))));
+    states = string(self.states);
+    specimens = string(self.specimens);
+    n_colours = length(fieldnames(self.Data.(specimens(1))));
     colours = lines(n_colours);
-    directions = string(obj.directions);
+    directions = string(self.directions);
 
     for sp = 1:numel(specimens)
         specimen = specimens(sp);
@@ -17,15 +17,15 @@ function p = plot(obj)
             state = states(s);
             colour = colours(s, :);
 
-            if any(cellfun(@(x) isempty(obj.Data.(specimen).(state).(x)), directions))
+            if any(cellfun(@(x) isempty(self.Data.(specimen).(state).(x)), directions))
                 continue
             end
-            signals = fieldnames(obj.Data.(specimen).(state).(directions(1)));
+            signals = fieldnames(self.Data.(specimen).(state).(directions(1)));
             for sg = 1:numel(signals)
                 figure(sg);
                 signal = signals{sg};
 
-                plots(s, sg) = gen_plots(obj.Data.(specimen).(state), directions, signal, colour);
+                plots(s, sg) = gen_plots(self.Data.(specimen).(state), directions, signal, colour);
             end
         end
 

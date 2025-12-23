@@ -1,7 +1,7 @@
-function path = path(obj)
-    names = unique([obj.SpecimenName]);
-    states = unique([obj.SpecimenState]);
-    directions = unique([obj.LoadingCondition]);
+function path = path(self)
+    names = unique([self.SpecimenName]);
+    states = unique([self.SpecimenState]);
+    directions = unique([self.LoadingCondition]);
 
-    path = Path(obj, names, states, directions);
+    path = Path(self, names, states, directions);
 end

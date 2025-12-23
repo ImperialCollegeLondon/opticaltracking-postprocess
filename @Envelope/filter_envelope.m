@@ -1,18 +1,18 @@
-function o = filter_envelope(obj, envelope)
+function o = filter_envelope(self, envelope)
     error("Not yet implemented");
-    mask = contains(obj.Directions, envelope, "IgnoreCase", true);
+    mask = contains(self.Directions, envelope, "IgnoreCase", true);
     if ~any(mask)
         o = [];
         return
     end
 
-    o = obj;
-    o.Envelopes = obj.Directions(mask);
+    o = self;
+    o.Envelopes = self.Directions(mask);
 
     for s = 1:numel(o.States)
         state = o.States(s);
         env = fieldnames(o.Data.(state));
-        to_remove = setdiff(env, obj.Directions(mask));
-        o.Data.(state) = rmfield(obj.Data.(state), to_remove);
+        to_remove = setdiff(env, self.Directions(mask));
+        o.Data.(state) = rmfield(self.Data.(state), to_remove);
     end
 end

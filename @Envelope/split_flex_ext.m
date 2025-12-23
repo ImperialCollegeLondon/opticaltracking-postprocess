@@ -1,10 +1,10 @@
-function [flex, ext] = split_flex_ext(obj)
-    directions = obj.directions;
-    states = obj.states;
-    specimens = obj.specimens;
-    obj.SpecimenName = specimens;
-    flex = obj;
-    ext = obj;
+function [flex, ext] = split_flex_ext(self)
+    directions = self.directions;
+    states = self.states;
+    specimens = self.specimens;
+    self.SpecimenName = specimens;
+    flex = self;
+    ext = self;
 
     for d = 1:numel(directions)
         direction = directions(d);
@@ -13,10 +13,10 @@ function [flex, ext] = split_flex_ext(obj)
 
             for sp = 1:numel(specimens)
                 specimen = specimens(sp);
-                signals = fieldnames(obj.Data.(specimen).(state).(direction));
+                signals = fieldnames(self.Data.(specimen).(state).(direction));
                 for sg = 1:numel(signals)
                     signal = signals{sg};
-                    datum = obj.Data.(specimen).(state).(direction).(signal);
+                    datum = self.Data.(specimen).(state).(direction).(signal);
                     n = round(height(datum)/2);
                     flex.Data.(specimen).(state).(direction).(signal) = datum(1:n, :);
                     ext.Data.(specimen).(state).(direction).(signal) = datum(n:end, :);

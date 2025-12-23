@@ -9,7 +9,7 @@ classdef Dunnett < PostHoc
         Significance
     end
     methods
-        function obj = Dunnett(spm, control, p_critical)
+        function self = Dunnett(spm, control, p_critical)
             signals = spm.signals;
             directions = spm.directions;
             specimens = spm.specimens;
@@ -46,21 +46,21 @@ classdef Dunnett < PostHoc
 
                             spm_t = spm1d.stats.ttest2(current, control_spcm);
                             inference = spm_t.inference(p_critical, 'two_tailed', true);
-                            obj.Data.(signal).(state).(direction).(header) = inference;
+                            self.Data.(signal).(state).(direction).(header) = inference;
                             is_significant.(header) = (inference.z > inference.zstar)';
                         end
-                        obj.Significance.(signal).(state).(direction) = is_significant;
+                        self.Significance.(signal).(state).(direction) = is_significant;
                     end
                 end
             end
 
-            obj.States = states;
-            obj.Control = control;
-            obj.PCritical = p_critical;
+            self.States = states;
+            self.Control = control;
+            self.PCritical = p_critical;
         end
 
-        function o = is_significant(obj)
-            o = obj.Significance;
+        function o = is_significant(self)
+            o = self.Significance;
         end
     end
 

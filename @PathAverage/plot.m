@@ -1,6 +1,6 @@
-function plots = plot(obj, orientations)
-    signals = obj.Signals;
-    states = obj.States;
+function plots = plot(self, orientations)
+    signals = self.Signals;
+    states = self.States;
     colours = lines(numel(states));
 
     for sg = 1:numel(signals)
@@ -12,18 +12,18 @@ function plots = plot(obj, orientations)
             colour = colours(s, :);
 
             if ~nargin > 1
-                orientations = obj.Data.(state).(signal).mean.Properties.VariableNames;
+                orientations = self.Data.(state).(signal).mean.Properties.VariableNames;
                 orientations = setdiff(orientations, 'flexion');
             end
             for o = 1:numel(orientations)
                 nexttile(o); hold on;
-                x = obj.Data.(state).(signal).mean.flexion;
-                y = obj.Data.(state).(signal).mean.(orientations{o});
+                x = self.Data.(state).(signal).mean.flexion;
+                y = self.Data.(state).(signal).mean.(orientations{o});
                 p = plot(x, y, 'Color', colour);
 
 
                 idx = 1:10+2*s:numel(x);
-                y_std = obj.Data.(state).(signal).std.(orientations{o});
+                y_std = self.Data.(state).(signal).std.(orientations{o});
                 errorbar(x(idx), y(idx), y_std(idx), 'LineStyle', 'none', 'Color', colour*0.7);
 
 

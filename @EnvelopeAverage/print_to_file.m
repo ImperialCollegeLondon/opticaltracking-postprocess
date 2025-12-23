@@ -1,9 +1,9 @@
-function obj = print_to_file(obj, path)
+function self = print_to_file(self, path)
     % % Prepare the folders
     fp_results = fullfile(path, "results", "average", "stability_envelope");
-    states = obj.States;
-    signals = obj.Signals;
-    directions = obj.Directions;
+    states = self.States;
+    signals = self.Signals;
+    directions = self.Directions;
     for st = 1:numel(states)
         state = states(st);
         for sg = 1:numel(signals)
@@ -14,7 +14,7 @@ function obj = print_to_file(obj, path)
             for d = 1:numel(directions)
                 direction = directions(d);
 
-                datum = obj.Data.(state).(signal).(direction);
+                datum = self.Data.(state).(signal).(direction);
                 headers = datum.mean.Properties.VariableNames;
 
                 t_mean = datum.mean;
