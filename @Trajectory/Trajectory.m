@@ -3,10 +3,11 @@ classdef Trajectory < handle
         SpecimenName
         SpecimenState
         LoadingCondition
+        Data struct = struct()
+        Transform
+        Sensors
         IsOptimised
         IsRightKnee
-        Transform
-        Data struct = struct()
     end
 
     methods 
