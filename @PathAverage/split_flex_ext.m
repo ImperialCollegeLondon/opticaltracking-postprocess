@@ -11,7 +11,10 @@ function [flex, ext] = split_flex_ext(self)
         for sg = 1:numel(signals)
             signal = signals(sg);
             datum = self.Data.(state).(signal);
-            n = round(height(datum.mean)/2);
+            headers = datum.Properties.VariableNames;
+            is_flexion = strcmpi(headers, 'flexion');
+            flexion = headers{is_flexion};
+            [~, n] = max(flexion);
 
             flex.Data.(state).(signal).mean = datum.mean(1:n, :);
             flex.Data.(state).(signal).std = datum.std(1:n, :);

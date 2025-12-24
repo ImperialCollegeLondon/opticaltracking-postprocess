@@ -31,7 +31,7 @@ function fig = plot(self, highlight_idx)
                 if isempty(highlight_idx)
                     continue;
                 end
-                interpolated_points = highlight_idx(t).(signal)(:,h);
+                interpolated_points = highlight_idx(t).(signal);
 
                 if any(interpolated_points)
                     hold on;
