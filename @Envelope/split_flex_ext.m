@@ -17,7 +17,10 @@ function [flex, ext] = split_flex_ext(self)
                 for sg = 1:numel(signals)
                     signal = signals{sg};
                     datum = self.Data.(specimen).(state).(direction).(signal);
-                    n = round(height(datum)/2);
+                    headers = datum.Properties.VariableNames;
+                    is_flexion = strcmpi(headers, 'flexion');
+                    flexion = headers{is_flexion};
+                    [~, n] = max(flexion);
                     flex.Data.(specimen).(state).(direction).(signal) = datum(1:n, :);
                     ext.Data.(specimen).(state).(direction).(signal) = datum(n:end, :);
                 end

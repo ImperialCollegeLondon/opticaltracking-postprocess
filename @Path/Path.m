@@ -8,34 +8,34 @@ classdef Path
     end
 
     methods
-        function obj = Path(data, names, states, directions)
-            obj.Specimens = names;
-            obj.States = setdiff(unique(states), ["UKA_w_pACL", "Unoptimised"]);
-            obj.Directions = directions;
-            obj.Signals = string(fieldnames([data.Data]));
+        function self = Path(data, names, states, directions)
+            self.Specimens = names;
+            self.States = setdiff(unique(states), ["UKA_w_pACL", "Unoptimised"]);
+            self.Directions = directions;
+            self.Signals = string(fieldnames([data.Data]));
 
             is_neutral = contains([data.LoadingCondition], "neutral", "IgnoreCase", true);
             for st = 1:numel(states)
                 state = states(st);
                 is_state = [data.SpecimenState] == state;
-                obj.Data.(state) = data(is_state & is_neutral);
+                self.Data.(state) = data(is_state & is_neutral);
             end
         end
-        function o = average(obj)
-            o = PathAverage(obj);
+        function o = average(self)
+            o = PathAverage(self);
         end
-        function o = filter_signal(obj, signal)
-            obj.Signals = obj.Signals(contains(obj.Signals, signal));
-            o = obj;
+        function o = filter_signal(self, signal)
+            self.Signals = self.Signals(contains(self.Signals, signal));
+            o = self;
         end
-        function o = exclude_specimen(obj, specimen)
-            o = obj;
+        function o = exclude_specimen(self, specimen)
+            o = self;
             mask = contains(o.Specimens, specimen, "IgnoreCase", true);
             o.Specimens = o.Specimens(~mask);
         end
 
-        function o = exclude_specimen_exact(obj, specimen)
-            o = obj;
+        function o = exclude_specimen_exact(self, specimen)
+            o = self;
             specimens_remaining = setdiff(o.Specimens, specimen);
             o.Specimens = specimens_remaining;
         end

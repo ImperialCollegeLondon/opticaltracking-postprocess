@@ -16,12 +16,11 @@ for d = 1:numel(directions)
             datum = self.Data.(state).(signal).(direction);
             headers = fieldnames(datum);
 
-            for h = 1:numel(headers)
-                header = headers{h};
-                n = round(height(datum.(header))/2);
-                flex.Data.(state).(signal).(direction).(header) = datum.(header)(1:n, :);
-                ext.Data.(state).(signal).(direction).(header) = datum.(header)(n:end, :);
-            end
+            is_flexion = strcmpi(headers, 'flexion');
+            flexion = headers{is_flexion};
+            [~, n] = max(flexion);
+            flex.Data.(state).(signal).(direction) = datum.(header)(1:n, :);
+            ext.Data.(state).(signal).(direction) = datum.(header)(n:end, :);
         end
     end
 end

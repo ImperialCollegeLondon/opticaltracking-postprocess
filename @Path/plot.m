@@ -1,8 +1,8 @@
-function plots = plot(obj)
-    signals = obj.Signals;
-    states = obj.States;
+function plots = plot(self)
+    signals = self.Signals;
+    states = self.States;
     colours = lines(numel(states));
-    specimens = obj.Specimens;
+    specimens = self.Specimens;
     for sp = 1:numel(specimens)
         specimen = specimens(sp);
         for sg = 1:numel(signals)
@@ -13,12 +13,12 @@ function plots = plot(obj)
                 state = states(s);
                 colour = colours(s, :);
 
-                orientations = obj.Data.(specimen).(state).(signal).Properties.VariableNames;
+                orientations = self.Data.(specimen).(state).(signal).Properties.VariableNames;
                 orientations = setdiff(orientations, 'flexion');
                 for o = 1:numel(orientations)
                     nexttile(o); hold on;
-                    x = obj.Data.(specimen).(state).(signal).flexion;
-                    y = obj.Data.(specimen).(state).(signal).(orientations{o});
+                    x = self.Data.(specimen).(state).(signal).flexion;
+                    y = self.Data.(specimen).(state).(signal).(orientations{o});
                     plots(sp, s) = plot(x, y, 'Color', colour);
 
                     grid on;
