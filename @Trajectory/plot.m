@@ -9,7 +9,7 @@ function fig = plot(self, highlight_idx)
     for sg = 1:numel(signals)
         signal = signals(sg);
         for t = 1:numel(self)
-            data = self(t).Data;
+            data = self(t).Kinematics;
             datum = data.(signal);
 
             if isempty(datum)

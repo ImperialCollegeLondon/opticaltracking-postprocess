@@ -11,8 +11,8 @@ function o = filter_envelope(self, envelope)
 
     for s = 1:numel(o.States)
         state = o.States(s);
-        env = fieldnames(o.Data.(state));
+        env = fieldnames(o.Kinematics.(state));
         to_remove = setdiff(env, self.Directions(mask));
-        o.Data.(state) = rmfield(self.Data.(state), to_remove);
+        o.Kinematics.(state) = rmfield(self.Kinematics.(state), to_remove);
     end
 end

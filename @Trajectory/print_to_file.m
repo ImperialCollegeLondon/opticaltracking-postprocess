@@ -20,7 +20,7 @@ for sg = 1:numel(signals)
 
 
                 is_current = is_specimen & is_state & is_lc;
-                current_specimen = [self(is_current).Data];
+                current_specimen = [self(is_current).Kinematics];
                 for n = 1:numel(current_specimen)
                     if n > 1
                         keyboard

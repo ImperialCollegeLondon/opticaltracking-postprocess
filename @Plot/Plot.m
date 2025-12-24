@@ -22,7 +22,7 @@ classdef Plot
 end
 
 function [line_handles, figure_handles] = create_plot(self, orientations)
-    if isempty(self.Data)
+    if isempty(self.Kinematics)
         line_handles = plot(0);
         return
     end
@@ -40,7 +40,7 @@ function [line_handles, figure_handles] = create_plot(self, orientations)
             state = states(s);
             colour = colours(s, :);
 
-            plots(s).(signal) = gen_plots(self.Data.(state).(signal), directions, colour, s, orientations);
+            plots(s).(signal) = gen_plots(self.Kinematics.(state).(signal), directions, colour, s, orientations);
 
         end
         sgtitle(replace(signals(sg), '_', ' '));

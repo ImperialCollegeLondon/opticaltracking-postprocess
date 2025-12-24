@@ -9,7 +9,7 @@ classdef SPM
         Specimens
         Directions
         Signals
-        Data
+        Kinematics
     end
 
     methods
@@ -53,7 +53,7 @@ classdef SPM
             self.Specimens = specimens;
             self.Directions = directions;
             self.Signals = signals;
-            self.Data = data;
+            self.Kinematics = data;
         end
 
 
@@ -91,7 +91,7 @@ classdef SPM
         end
 
         function o = data(self)
-            o = self.Data;
+            o = self.Kinematics;
         end
 
 

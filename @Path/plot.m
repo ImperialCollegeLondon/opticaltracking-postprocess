@@ -13,12 +13,12 @@ function plots = plot(self)
                 state = states(s);
                 colour = colours(s, :);
 
-                orientations = self.Data.(specimen).(state).(signal).Properties.VariableNames;
+                orientations = self.Kinematics.(specimen).(state).(signal).Properties.VariableNames;
                 orientations = setdiff(orientations, 'flexion');
                 for o = 1:numel(orientations)
                     nexttile(o); hold on;
-                    x = self.Data.(specimen).(state).(signal).flexion;
-                    y = self.Data.(specimen).(state).(signal).(orientations{o});
+                    x = self.Kinematics.(specimen).(state).(signal).flexion;
+                    y = self.Kinematics.(specimen).(state).(signal).(orientations{o});
                     plots(sp, s) = plot(x, y, 'Color', colour);
 
                     grid on;

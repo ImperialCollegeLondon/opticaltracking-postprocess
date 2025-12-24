@@ -13,14 +13,14 @@ for d = 1:numel(directions)
 
         for sg = 1:numel(signals)
             signal = signals(sg);
-            datum = self.Data.(state).(signal).(direction);
+            datum = self.Kinematics.(state).(signal).(direction);
             headers = fieldnames(datum);
 
             is_flexion = strcmpi(headers, 'flexion');
             flexion = headers{is_flexion};
             [~, n] = max(flexion);
-            flex.Data.(state).(signal).(direction) = datum.(header)(1:n, :);
-            ext.Data.(state).(signal).(direction) = datum.(header)(n:end, :);
+            flex.Kinematics.(state).(signal).(direction) = datum.(header)(1:n, :);
+            ext.Kinematics.(state).(signal).(direction) = datum.(header)(n:end, :);
         end
     end
 end

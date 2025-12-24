@@ -7,12 +7,12 @@ function spmi = spm(self)
         signal = signals(sg);
         for d = 1:numel(directions)
             direction = directions(d);
-            x = self.Data.(states(1)).(signal).(direction).mean;
+            x = self.Kinematics.(states(1)).(signal).(direction).mean;
             val = nan(height(x), numel(states), width(x));
 
             for st = 1:numel(states)
                 state = states(st);
-                datum = self.Data.(state).(signal).(direction).mean;
+                datum = self.Kinematics.(state).(signal).(direction).mean;
                 val(:, st, :) = table2array(datum);
             end
 

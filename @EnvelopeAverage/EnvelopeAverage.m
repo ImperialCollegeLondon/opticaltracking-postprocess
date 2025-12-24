@@ -1,6 +1,6 @@
 classdef EnvelopeAverage
     properties
-        Data
+        Kinematics
         States
         Directions
         Signals
@@ -17,14 +17,14 @@ classdef EnvelopeAverage
                 for st = 1:numel(states)
                     state = states(st);
 
-                    % signals = fieldnames(envelopes.Data.(specimens(1)).(state).(direction));
+                    % signals = fieldnames(envelopes.Kinematics.(specimens(1)).(state).(direction));
                     for sg = 1:numel(signals)
                         signal = signals{sg};
                         all_tables = cell(1, numel(specimens));
                         for sp = 1:numel(specimens)
                             specimen = specimens(sp);
 
-                            all_tables{sp} = envelopes.Data.(specimen).(state).(direction).(signal);
+                            all_tables{sp} = envelopes.Kinematics.(specimen).(state).(direction).(signal);
                         end
                         headers = all_tables{1}.Properties.VariableNames;
                         tables = cellfun(@table2array, all_tables, "UniformOutput", false);
@@ -32,8 +32,8 @@ classdef EnvelopeAverage
                         avg = mean(stacked, 3);
                         stdev = std(stacked, 0, 3);
 
-                        self.Data.(state).(signal).(direction).mean = array2table(avg, "VariableNames", headers);
-                        self.Data.(state).(signal).(direction).std = array2table(stdev, "VariableNames", headers);
+                        self.Kinematics.(state).(signal).(direction).mean = array2table(avg, "VariableNames", headers);
+                        self.Kinematics.(state).(signal).(direction).std = array2table(stdev, "VariableNames", headers);
                     end
                 end
             end

@@ -7,7 +7,7 @@ function [self, interp_idx] = interpolate(self, func)
     for sg = 1:numel(signals)
         signal = signals(sg);
         for t = 1:numel(self)
-            datum = self(t).Data.(signal);
+            datum = self(t).Kinematics.(signal);
             if isempty(datum)
             interp_idx(t).(signal) = [];
             continue
@@ -24,7 +24,7 @@ function [self, interp_idx] = interpolate(self, func)
             tab = array2table(mat, "VariableNames", headers);
 
 
-            [self(t).Data.(signal), idx ] = func(tab);
+            [self(t).Kinematics.(signal), idx ] = func(tab);
             interp_idx(t).(signal) = any(idx, 2);
         end
     end

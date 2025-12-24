@@ -17,7 +17,7 @@ function self = print_to_file(self, path)
                 for d = 1:numel(directions)
                     direction = directions(d);
 
-                    datum = self.Data.(specimen).(state).(direction).(signal);
+                    datum = self.Kinematics.(specimen).(state).(direction).(signal);
 
                     writetable(datum, strcat(fullfile(filepath, direction), '.csv'));
                 end

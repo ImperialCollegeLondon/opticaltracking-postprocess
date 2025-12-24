@@ -13,7 +13,7 @@ end
 %         orient = [];
 %     end
 %
-%     if isempty(self.Data)
+%     if isempty(self.Kinematics)
 %         o = plot(0);
 %         return
 %     end
@@ -30,7 +30,7 @@ end
 %             state = states(s);
 %             colour = colours(s, :);
 %
-%             plots(s, sg) = gen_plots(self.Data.(state).(signal), directions, colour, s, orient);
+%             plots(s, sg) = gen_plots(self.Kinematics.(state).(signal), directions, colour, s, orient);
 %
 %         end
 %         sgtitle(replace(signals(sg), '_', ' '));

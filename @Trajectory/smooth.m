@@ -12,7 +12,7 @@ function self = smooth(self, smoothing_func, fillmissing_func)
     for sg = 1:numel(signals)
         signal = signals(sg);
         for t = 1:numel(self)
-            datum = self(t).Data.(signal);
+            datum = self(t).Kinematics.(signal);
             if isempty(datum)
                 continue
             end
@@ -22,7 +22,7 @@ function self = smooth(self, smoothing_func, fillmissing_func)
             R = fillmissing_func(R);
             R = smoothing_func(R);
 
-            self(t).Data.(signal) = array2table(R, "VariableNames", headers);
+            self(t).Kinematics.(signal) = array2table(R, "VariableNames", headers);
         end
     end
 end

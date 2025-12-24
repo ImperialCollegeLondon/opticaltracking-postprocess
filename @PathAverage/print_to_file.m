@@ -11,7 +11,7 @@ function self = print_to_file(self, path)
             filepath = fullfile(fp_results, signal);
             mkdir(filepath);
 
-            datum = self.Data.(state).(signal);
+            datum = self.Kinematics.(state).(signal);
             headers = datum.mean.Properties.VariableNames;
 
             t_mean = datum.mean;

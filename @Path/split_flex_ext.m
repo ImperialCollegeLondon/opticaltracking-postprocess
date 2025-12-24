@@ -6,18 +6,18 @@ function [flex, ext] = split_flex_ext(self)
     flex = self;
     ext = self;
 
-    flex.Data = [];
-    ext.Data = [];
+    flex.Kinematics = [];
+    ext.Kinematics = [];
 
     for sp = 1:numel(specimens)
         specimen = specimens(sp);
         for st = 1:numel(states)
             state = states(st);
-            is_specimen = [self.Data.(state).SpecimenName] == specimen;
+            is_specimen = [self.Kinematics.(state).SpecimenName] == specimen;
 
             for sg = 1:numel(signals)
                 signal = signals(sg);
-                data = [self.Data.(state).Data];
+                data = [self.Kinematics.(state).Kinematics];
                 try
                     datum = data(is_specimen).(signal);
                 catch
@@ -28,8 +28,8 @@ function [flex, ext] = split_flex_ext(self)
                 flexion = headers{is_flexion};
                 [~, n] = max(flexion);
 
-                flex.Data.(specimen).(state).(signal) = datum(1:n, :);
-                ext.Data.(specimen).(state).(signal) = datum(n:end, :);
+                flex.Kinematics.(specimen).(state).(signal) = datum(1:n, :);
+                ext.Kinematics.(specimen).(state).(signal) = datum(n:end, :);
             end
         end
     end

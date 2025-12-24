@@ -13,16 +13,16 @@ function [flex, ext] = split_flex_ext(self)
 
             for sp = 1:numel(specimens)
                 specimen = specimens(sp);
-                signals = fieldnames(self.Data.(specimen).(state).(direction));
+                signals = fieldnames(self.Kinematics.(specimen).(state).(direction));
                 for sg = 1:numel(signals)
                     signal = signals{sg};
-                    datum = self.Data.(specimen).(state).(direction).(signal);
+                    datum = self.Kinematics.(specimen).(state).(direction).(signal);
                     headers = datum.Properties.VariableNames;
                     is_flexion = strcmpi(headers, 'flexion');
                     flexion = headers{is_flexion};
                     [~, n] = max(flexion);
-                    flex.Data.(specimen).(state).(direction).(signal) = datum(1:n, :);
-                    ext.Data.(specimen).(state).(direction).(signal) = datum(n:end, :);
+                    flex.Kinematics.(specimen).(state).(direction).(signal) = datum(1:n, :);
+                    ext.Kinematics.(specimen).(state).(direction).(signal) = datum(n:end, :);
                 end
             end
         end

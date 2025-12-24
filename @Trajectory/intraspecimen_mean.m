@@ -3,7 +3,7 @@ function self = intraspecimen_mean(self)
     for sg = 1:numel(signals)
         signal = signals(sg);
         for t = 1:numel(self)
-            datum = self(t).Data.(signal);
+            datum = self(t).Kinematics.(signal);
             if isempty(datum)
                 continue
             end
@@ -23,7 +23,7 @@ function self = intraspecimen_mean(self)
                 quantised_means = quantised_runs;
             end
 
-            self(t).Data.(signal) = array2table(quantised_means, "VariableNames", headers);
+            self(t).Kinematics.(signal) = array2table(quantised_means, "VariableNames", headers);
         end
     end
 end

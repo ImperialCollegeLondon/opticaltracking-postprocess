@@ -4,7 +4,7 @@ classdef PathAverage
         States
         Directions
         Signals
-        Data
+        Kinematics
     end
     methods 
         function self = PathAverage(paths)
@@ -12,7 +12,7 @@ classdef PathAverage
             signals = paths.Signals;
             for st = 1:numel(states)
                 state = states(st);
-                data = [paths.Data.(state).Data];
+                data = [paths.Kinematics.(state).Kinematics];
                 for sg = 1:numel(signals)
                     signal = signals(sg);
                     
@@ -24,8 +24,8 @@ classdef PathAverage
 
                     headers = data(1).(signal).Properties.VariableNames;
 
-                    self.Data.(state).(signal).mean = array2table(avg, "VariableNames", headers);
-                    self.Data.(state).(signal).std = array2table(stdev, "VariableNames", headers);
+                    self.Kinematics.(state).(signal).mean = array2table(avg, "VariableNames", headers);
+                    self.Kinematics.(state).(signal).std = array2table(stdev, "VariableNames", headers);
                 end
             end
             self.Directions = paths.Directions;

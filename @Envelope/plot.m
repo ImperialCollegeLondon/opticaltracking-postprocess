@@ -1,13 +1,13 @@
 function p = plot(self)
 
-    if isempty(self.Data)
+    if isempty(self.Kinematics)
         p = plot(0);
         return
     end
 
     states = string(self.states);
     specimens = string(self.specimens);
-    n_colours = length(fieldnames(self.Data.(specimens(1))));
+    n_colours = length(fieldnames(self.Kinematics.(specimens(1))));
     colours = lines(n_colours);
     directions = string(self.directions);
 
@@ -17,15 +17,15 @@ function p = plot(self)
             state = states(s);
             colour = colours(s, :);
 
-            if any(cellfun(@(x) isempty(self.Data.(specimen).(state).(x)), directions))
+            if any(cellfun(@(x) isempty(self.Kinematics.(specimen).(state).(x)), directions))
                 continue
             end
-            signals = fieldnames(self.Data.(specimen).(state).(directions(1)));
+            signals = fieldnames(self.Kinematics.(specimen).(state).(directions(1)));
             for sg = 1:numel(signals)
                 figure(sg);
                 signal = signals{sg};
 
-                plots(s, sg) = gen_plots(self.Data.(specimen).(state), directions, signal, colour);
+                plots(s, sg) = gen_plots(self.Kinematics.(specimen).(state), directions, signal, colour);
             end
         end
 
