@@ -1,6 +1,6 @@
 classdef Envelope
     properties
-        Data
+        Kinematics
         States
         Directions
         SpecimenName
@@ -38,8 +38,8 @@ classdef Envelope
             self.Signals = fieldnames(specimens.(names(1)).(states{1}).(directions{1}));
             self.States = setdiff(unique(states), ["UKA_w_pACL", "Unoptimised"]); % Remove
             self.Directions = unique(directions);
-            % self.Data = subtract_native(specimens, native_neutral);
-            self.Data = subtract_neutral(specimens, neutral);
+            % self.Kinematics = subtract_native(specimens, native_neutral);
+            self.Kinematics = subtract_neutral(specimens, neutral);
         end
     end
 
@@ -102,14 +102,14 @@ function output = split_loading_condition(trajectory, envelope, specimen_states)
                     output.(specimen_states{st}).(name) = [];
                     continue
                 end
-                % is_valid = valid_flexion([datum.Data], threshold_valid_run);
+                % is_valid = valid_flexion([datum.Kinematics], threshold_valid_run);
                 % if ~any(is_valid)
                 %     continue
                 % end
                 % datum = datum(is_valid);
 
-                % output.(specimen_states{st}).(name) = datum(direction(is_valid)).Data;
-                output.(specimen_states{st}).(name) = datum.Data;
+                % output.(specimen_states{st}).(name) = datum(direction(is_valid)).Kinematics;
+                output.(specimen_states{st}).(name) = datum.Kinematics;
             end
         end
     end
@@ -148,16 +148,16 @@ function o = subtract_neutral(data, neutral)
                 for sg = 1:numel(signals)
                     signal = signals{sg};
                     try
-                        is_incomplete_run = ~all(size(datum.(signal)) == size(curr_neutral.Data.(signal)));
+                        is_incomplete_run = ~all(size(datum.(signal)) == size(curr_neutral.Kinematics.(signal)));
                     catch ME
                         keyboard
                     end
                     if is_incomplete_run
                         continue
                     end
-                    o.(specimen_name).(state).(loading_condition).(signal) = datum.(signal) - curr_neutral.Data.(signal);
+                    o.(specimen_name).(state).(loading_condition).(signal) = datum.(signal) - curr_neutral.Kinematics.(signal);
                     try
-                        o.(specimen_name).(state).(loading_condition).(signal).flexion = curr_neutral.Data.(signal).flexion;
+                        o.(specimen_name).(state).(loading_condition).(signal).flexion = curr_neutral.Kinematics.(signal).flexion;
                     catch ME
                         if contains(ME.message, "flexion")
                             warning("No field called 'flexion'. Expect angles to be all 0!")
@@ -196,14 +196,14 @@ end
 %
 %                 for sg = 1:numel(signals)
 %                     signal = signals{sg};
-%                     is_incomplete_run = ~all(size(datum.(signal)) == size(curr_native.Data.(signal)));
+%                     is_incomplete_run = ~all(size(datum.(signal)) == size(curr_native.Kinematics.(signal)));
 %
 %                     if is_incomplete_run
 %                         continue
 %                     end
-%                     o.(specimen_name).(state).(loading_condition).(signal) = datum.(signal) - curr_native.Data.(signal);
+%                     o.(specimen_name).(state).(loading_condition).(signal) = datum.(signal) - curr_native.Kinematics.(signal);
 %                     try
-%                         o.(specimen_name).(state).(loading_condition).(signal).flexion = curr_native.Data.(signal).flexion;
+%                         o.(specimen_name).(state).(loading_condition).(signal).flexion = curr_native.Kinematics.(signal).flexion;
 %                     catch ME
 %                         if contains(ME.message, "flexion")
 %                             warning("No field called 'flexion'. Expect angles to be all 0!")

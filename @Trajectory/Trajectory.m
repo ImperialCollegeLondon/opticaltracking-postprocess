@@ -3,7 +3,7 @@ classdef Trajectory < handle
         SpecimenName
         SpecimenState
         LoadingCondition
-        Data struct = struct()
+        Kinematics struct = struct()
         Transform
         Sensors
         IsOptimised
@@ -28,7 +28,7 @@ classdef Trajectory < handle
     % Convenience functions
     methods
         function out = signals(self)
-            out = string(fields(self(1).Data));
+            out = string(fields(self(1).Kinematics));
         end
         function out = specimen(self, arg)
             if nargin > 1
@@ -95,7 +95,7 @@ classdef Trajectory < handle
             is_lc = contains([self.LoadingCondition], loading_condition, "IgnoreCase", true);
             mask = is_specimen & is_state & is_lc;
 
-            data = [self.Data];
+            data = [self.Kinematics];
             signals = fieldnames(data);
             is_field = contains(signals, signal_in, "IgnoreCase", true);
             signals_valid = signals(is_field);
@@ -103,7 +103,7 @@ classdef Trajectory < handle
                 signal = signals_valid{f};
                 datum = data(mask).(signal);
                 datum.internal_rotation = -datum.internal_rotation;
-                self(mask).Data.(signal) = datum;
+                self(mask).Kinematics.(signal) = datum;
             end
             
             o = self;

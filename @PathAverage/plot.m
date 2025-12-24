@@ -12,18 +12,18 @@ function plots = plot(self, orientations)
             colour = colours(s, :);
 
             if ~nargin > 1
-                orientations = self.Data.(state).(signal).mean.Properties.VariableNames;
+                orientations = self.Kinematics.(state).(signal).mean.Properties.VariableNames;
                 orientations = setdiff(orientations, 'flexion');
             end
             for o = 1:numel(orientations)
                 nexttile(o); hold on;
-                x = self.Data.(state).(signal).mean.flexion;
-                y = self.Data.(state).(signal).mean.(orientations{o});
+                x = self.Kinematics.(state).(signal).mean.flexion;
+                y = self.Kinematics.(state).(signal).mean.(orientations{o});
                 p = plot(x, y, 'Color', colour);
 
 
                 idx = 1:10+2*s:numel(x);
-                y_std = self.Data.(state).(signal).std.(orientations{o});
+                y_std = self.Kinematics.(state).(signal).std.(orientations{o});
                 errorbar(x(idx), y(idx), y_std(idx), 'LineStyle', 'none', 'Color', colour*0.7);
 
 

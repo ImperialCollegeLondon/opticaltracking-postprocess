@@ -7,7 +7,7 @@ function self = end_flexion_at(self, angle)
     for sg = 1:numel(signals)
         signal = signals(sg);
         for t = 1:numel(self)
-            datum = self(t).Data.(signal);
+            datum = self(t).Kinematics.(signal);
             if isempty(datum)
                 continue
             end
@@ -18,7 +18,7 @@ function self = end_flexion_at(self, angle)
 
             max_angle = max(datum.(flexion));
             delta = angle - max_angle;
-            self(t).Data.(signal).(flexion) = datum.(flexion) + delta;
+            self(t).Kinematics.(signal).(flexion) = datum.(flexion) + delta;
         end
     end
 end

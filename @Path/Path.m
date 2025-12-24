@@ -3,7 +3,7 @@ classdef Path
         Specimens
         States
         Directions
-        Data
+        Kinematics
         Signals
     end
 
@@ -12,13 +12,13 @@ classdef Path
             self.Specimens = names;
             self.States = setdiff(unique(states), ["UKA_w_pACL", "Unoptimised"]);
             self.Directions = directions;
-            self.Signals = string(fieldnames([data.Data]));
+            self.Signals = string(fieldnames([data.Kinematics]));
 
             is_neutral = contains([data.LoadingCondition], "neutral", "IgnoreCase", true);
             for st = 1:numel(states)
                 state = states(st);
                 is_state = [data.SpecimenState] == state;
-                self.Data.(state) = data(is_state & is_neutral);
+                self.Kinematics.(state) = data(is_state & is_neutral);
             end
         end
         function o = average(self)

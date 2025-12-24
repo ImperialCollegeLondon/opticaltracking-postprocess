@@ -3,6 +3,6 @@ function spm = spm(self)
     directions = self.directions;
     specimens = self.specimens;
     signals = self.signals;
-    data = self.Data;
+    data = self.Kinematics;
     spm = SPM(states, directions, specimens, signals, data);
 end

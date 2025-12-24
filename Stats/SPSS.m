@@ -1,7 +1,7 @@
 classdef SPSS
     properties
         Metadata
-        Data
+        Kinematics
     end
     methods
         function self = SPSS(envelope, interval)
@@ -22,7 +22,7 @@ classdef SPSS
                     direction = directions(d);
 
                     % Preallocation stuff
-                        d_prealoc = envelope.Data.(specimens(1)).(states(1)).(direction).(signal);
+                        d_prealoc = envelope.Kinematics.(specimens(1)).(states(1)).(direction).(signal);
                         ang = 1:interval:height(d_prealoc);
                         d_prealoc = d_prealoc(ang, :);
                         headers = d_prealoc.Properties.VariableNames;
@@ -33,7 +33,7 @@ classdef SPSS
                         specimen = specimens(sp);
                         for st = 1:numel(states)
                             state = states(st);
-                            datum = envelope.Data.(specimen).(state).(direction).(signal);
+                            datum = envelope.Kinematics.(specimen).(state).(direction).(signal);
                             val(:, st, :) = datum{ang, :};
                         end
                         res = reshape(pagetranspose(val), [], 1, numel(headers));
@@ -41,7 +41,7 @@ classdef SPSS
                     end
                     for h = 1:numel(headers)
                         header = headers{h};
-                        self.Data.(signal).(direction).(header) = all_specimens(:, :, h);
+                        self.Kinematics.(signal).(direction).(header) = all_specimens(:, :, h);
                     end
 
                     % Precompute sizes
@@ -57,16 +57,16 @@ classdef SPSS
         end
 
         function print_to_file(self, root)
-            signals = fields(self.Data);
+            signals = fields(self.Kinematics);
             for s = 1:numel(signals)
                 signal = signals{s};
-                directions = fields(self.Data.(signal));
+                directions = fields(self.Kinematics.(signal));
                 for d = 1:numel(directions)
                     direction = directions{d};
-                    headers = fields(self.Data.(signal).(direction));
+                    headers = fields(self.Kinematics.(signal).(direction));
                     for h = 1:numel(headers)
                         header = headers{h};
-                        data = self.Data.(signal).(direction).(header);
+                        data = self.Kinematics.(signal).(direction).(header);
 
                         path = fullfile(root, 'results', 'spss', signal, direction);
                         if ~exist(path, "dir")

@@ -3,7 +3,7 @@ classdef Dunnett < PostHoc
         States
         Control
         PCritical
-        Data
+        Kinematics
     end
     properties % From PostHoc
         Significance
@@ -46,7 +46,7 @@ classdef Dunnett < PostHoc
 
                             spm_t = spm1d.stats.ttest2(current, control_spcm);
                             inference = spm_t.inference(p_critical, 'two_tailed', true);
-                            self.Data.(signal).(state).(direction).(header) = inference;
+                            self.Kinematics.(signal).(state).(direction).(header) = inference;
                             is_significant.(header) = (inference.z > inference.zstar)';
                         end
                         self.Significance.(signal).(state).(direction) = is_significant;

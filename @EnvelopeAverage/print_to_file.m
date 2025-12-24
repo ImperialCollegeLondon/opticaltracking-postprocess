@@ -14,7 +14,7 @@ function self = print_to_file(self, path)
             for d = 1:numel(directions)
                 direction = directions(d);
 
-                datum = self.Data.(state).(signal).(direction);
+                datum = self.Kinematics.(state).(signal).(direction);
                 headers = datum.mean.Properties.VariableNames;
 
                 t_mean = datum.mean;

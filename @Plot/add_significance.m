@@ -24,7 +24,7 @@ function add_significance(self, posthoc)
                     dof = DOFs{d};
                     line = line_handles.(dof).(orientation);
 
-                    x = line.XData;
+                    x = line.XKinematics;
 
                     if state == posthoc.Control
                         is_significant = true(numel(x), 1);
@@ -35,7 +35,7 @@ function add_significance(self, posthoc)
                         continue;
                     end
 
-                    y = line.YData;
+                    y = line.YKinematics;
                     line_width = line.LineWidth * 4;
                     colour = line.Color;
                     plot(x(is_significant), y(is_significant), 'LineWidth', line_width, 'Color', colour, 'HandleVisibility', 'off');
