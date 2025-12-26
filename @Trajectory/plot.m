@@ -4,13 +4,13 @@ function fig = plot(self, highlight_idx)
         highlight_idx = []
     end
 
-    signals = [self.signals];
 
-    for sg = 1:numel(signals)
-        signal = signals(sg);
-        for t = 1:numel(self)
-            data = self(t).Kinematics;
-            datum = data.(signal);
+    for t = 1:numel(self)
+        data = self(t);
+        signals = data.signals;
+        for sg = 1:numel(signals)
+            signal = signals(sg);
+            datum = data.Kinematics.(signal);
 
             if isempty(datum)
                 continue

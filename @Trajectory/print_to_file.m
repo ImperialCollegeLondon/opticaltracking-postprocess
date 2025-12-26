@@ -25,15 +25,18 @@ for sg = 1:numel(signals)
                     if n > 1
                         keyboard
                     end
-                datum = current_specimen(n).(signal);
-                if isempty(datum)
-                    continue
-                end
+                    if ~ismember(signal, fields(current_specimen))
+                        continue
+                    end
+                    datum = current_specimen(n).(signal);
+                    if isempty(datum)
+                        continue
+                    end
 
-                filepath = fullfile(fp_results, signal, state, loading_condition);
-                mkdir(filepath);
+                    filepath = fullfile(fp_results, signal, state, loading_condition);
+                    mkdir(filepath);
 
-                writetable(datum, strcat(fullfile(filepath, specimen), '.csv'));
+                    writetable(datum, strcat(fullfile(filepath, specimen), '.csv'));
                 end
             end
         end

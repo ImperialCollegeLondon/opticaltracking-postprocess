@@ -28,7 +28,10 @@ classdef Trajectory < handle
     % Convenience functions
     methods
         function out = signals(self)
-            out = string(fields(self(1).Kinematics));
+            kinematics = {self.Kinematics};
+            field_names = cellfun(@fields, kinematics, "UniformOutput", false);
+            all_signals = vertcat(field_names{:});
+            out = string(unique(all_signals));
         end
         function out = specimen(self, arg)
             if nargin > 1

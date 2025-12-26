@@ -1,9 +1,10 @@
 function self = intraspecimen_mean(self)
-    signals = self.signals;
     for t = 1:numel(self)
+        data = self(t);
+        signals = data.signals;
         for sg = 1:numel(signals)
             signal = signals(sg);
-            datum = self(t).Kinematics.(signal);
+            datum = data.Kinematics.(signal);
             if isempty(datum)
                 continue
             end
