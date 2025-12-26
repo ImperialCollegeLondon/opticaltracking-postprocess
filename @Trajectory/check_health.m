@@ -6,10 +6,10 @@ function problems = check_health(self, min_flexion_arc, fraction_of_data)
         min_flexion_arc = 60
         fraction_of_data = 0.2;
     end
-    signals = self.signals;
     i = 1;
     for t = 1:numel(self)
         data = self(t);
+        signals = data.signals;
 
         for sg = 1:numel(signals)
             signal = signals(sg);

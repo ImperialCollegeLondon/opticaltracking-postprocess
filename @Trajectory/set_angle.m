@@ -6,14 +6,14 @@ function self = set_angle(self, angle, func)
         angle (1,1) {mustBeNumeric}
         func
     end
-    signals = self.signals;
 
     for t = 1:numel(self)
-
+        data = self(t);
+        signals = data.signals;
         %% Kinematics
         for sg = 1:numel(signals)
             signal = signals(sg);
-            kinematics = self(t).Kinematics.(signal);
+            kinematics = data.Kinematics.(signal);
             if isempty(kinematics)
                 continue
             end
