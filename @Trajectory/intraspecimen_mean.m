@@ -39,9 +39,11 @@ function means = calc_means(datum)
         return
     end
     quantised_runs = quantise(runs);
-
-    quantised_runs = cellfun(@(x) fillmissing(x, "pchip"), quantised_runs, "UniformOutput", false);
     mat = cellfun(@table2array, quantised_runs, "UniformOutput", false);
     mat_stack = cat(3, mat{:});
-    means = array2table(mean(mat_stack, 3), "VariableNames",headers);
+
+    mat_means = mean(mat_stack, 3, "omitmissing");
+    tab_means = array2table(mat_means, "VariableNames",headers);
+
+    means = fillmissing(tab_means, "pchip");
 end
