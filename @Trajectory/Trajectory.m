@@ -8,6 +8,7 @@ classdef Trajectory < handle
         Sensors
         IsOptimised
         IsRightKnee
+        Root
     end
 
     methods 
@@ -27,6 +28,9 @@ classdef Trajectory < handle
 
     % Convenience functions
     methods
+        function self = set_root(self, path)
+            self.Root = path;
+        end
         function out = signals(self)
             kinematics = {self.Kinematics};
             field_names = cellfun(@fields, kinematics, "UniformOutput", false);
@@ -66,28 +70,31 @@ classdef Trajectory < handle
             end
         end
 
-        function envelope = create_ap_envelope(self, name_native, name_neutral_flexion)
-            if nargin > 1
-                envelope = self.stability_envelope(["ant", "pos"], name_native, name_neutral_flexion);
-            else
-                envelope = self.stability_envelope(["ant", "pos"]);
+        function envelope = ap(self, name_native, name_neutral_flexion)
+            arguments
+                self
+                name_native = "Native"
+                name_neutral_flexion = "Neutral"
             end
+            envelope = self.create_stability_envelope(["ant", "pos"], name_native, name_neutral_flexion);
         end
 
-        function envelope = create_vv_envelope(self, name_native, name_neutral_flexion)
-            if nargin > 1
-                envelope = self.stability_envelope(["var", "val"], name_native, name_neutral_flexion);
-            else
-                envelope = self.stability_envelope(["var", "val"]);
+        function envelope = vv(self, name_native, name_neutral_flexion)
+            arguments
+                self
+                name_native = "Native"
+                name_neutral_flexion = "Neutral"
             end
+            envelope = self.create_stability_envelope(["var", "val"], name_native, name_neutral_flexion);
         end
 
-        function envelope = create_ie_envelope(self, name_native, name_neutral_flexion)
-            if nargin > 1
-                envelope = self.stability_envelope(["int", "ext"], name_native, name_neutral_flexion);
-            else
-                envelope = self.stability_envelope(["int", "ext"]);
+        function envelope = ie(self, name_native, name_neutral_flexion)
+            arguments
+                self
+                name_native = "Native"
+                name_neutral_flexion = "Neutral"
             end
+            envelope = self.create_stability_envelope(["int", "ext"], name_native, name_neutral_flexion);
         end
 
         % Needs to be made considerably more ergonomic
