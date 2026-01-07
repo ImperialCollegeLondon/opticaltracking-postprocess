@@ -1,25 +1,43 @@
 function plots = plot(self)
-    signals = self.Signals;
-    states = self.States;
-    colours = lines(numel(states));
-    specimens = self.Specimens;
-    for sp = 1:numel(specimens)
-        specimen = specimens(sp);
-        for sg = 1:numel(signals)
-            signal = signals(sg);
-            figure;
-            for s = 1:numel(states)
+arguments
+    self Path
+end
+signals = self.Signals;
+states = self.States;
+colours = lines(numel(states));
+specimens = self.Specimens;
+loading_conditions = self.LoadingCondition;
 
+for sg = 1:numel(signals)
+    signal = signals(sg);
+    for lc = 1:numel(loading_conditions)
+        loading_condition = loading_conditions(lc);
+
+        for sp = 1:numel(specimens)
+            specimen = specimens(sp);
+            fig = [];
+            for s = 1:numel(states)
                 state = states(s);
                 colour = colours(s, :);
 
-                orientations = self.Kinematics.(specimen).(state).(signal).Properties.VariableNames;
+                datum = self.Kinematics.(signal).(state).(loading_condition).(specimen);
+                if isempty(datum)
+                    continue
+                end
+
+                if isempty(fig)
+                    fig = figure;
+                end
+
+                orientations = datum.Properties.VariableNames;
                 orientations = setdiff(orientations, 'flexion');
                 for o = 1:numel(orientations)
+
+
                     nexttile(o); hold on;
-                    x = self.Kinematics.(specimen).(state).(signal).flexion;
-                    y = self.Kinematics.(specimen).(state).(signal).(orientations{o});
-                    plots(sp, s) = plot(x, y, 'Color', colour);
+                    x = datum.flexion;
+                    y = datum.(orientations{o});
+                    plots.(signal).(loading_condition).(specimen)(s) = plot(x, y, 'Color', colour);
 
                     grid on;
                     axis square;
@@ -27,11 +45,14 @@ function plots = plot(self)
                     ylabel(replace(orientations{o}, '_', ' '));
                 end
             end
-            sgtitle([specimen replace(signal, '_', ' ')]);
-            legend(plots(sp, :), state_regex_inv(states));
-
+            if ~isempty(fig)
+                sgtitle([specimen loading_condition replace(signal, '_', ' ')]);
+                has_data = ~arrayfun(@(o) isa(o, 'matlab.graphics.GraphicsPlaceholder'), plots.(signal).(loading_condition).(specimen));
+                legend(plots.(signal).(loading_condition).(specimen)(has_data), state_regex_inv(states(has_data)));
+            end
         end
     end
+end
 end
 
 
@@ -45,15 +66,15 @@ colours = lines(numel(specimen_states));
 for sn = 1:numel(specimen_names)
     % figure(sn)
     legend_text = "";
-    
+
     current_specimen = neutral_path([neutral_path.specimen] == specimen_names(sn));
 
     for ss = 1:numel(specimen_states)
         current_state = current_specimen([current_specimen.state] == specimen_states(ss));
         opt_jcs = {current_state.(jcss)};
-        
+
         colour = colours(ss, :);
-        legend_text(end+1) = specimen_states(ss); 
+        legend_text(end+1) = specimen_states(ss);
         for oj = 1:numel(opt_jcs)
 
             datum = opt_jcs{oj};
@@ -78,7 +99,7 @@ for sn = 1:numel(specimen_names)
         end
     end
     sgtitle([specimen_names(sn) replace(jcss, '_', ' ')]);
-    
+
     is_line = arrayfun(@(x) isa(x, 'matlab.graphics.chart.primitive.Line'), legend_handles(sn, :));
     current_legends = legend_handles(sn, :);
     legend_lines = current_legends(is_line);
@@ -86,7 +107,7 @@ for sn = 1:numel(specimen_names)
     legend_text = legend_text(~(legend_text == ""));
     legend_text = state_regex_inv(legend_text);
 
-    
+
     legend_text = legend_text(is_line);
     legend(legend_lines, legend_text)
 end

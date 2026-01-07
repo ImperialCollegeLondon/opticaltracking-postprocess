@@ -1,4 +1,4 @@
-function envelope = stability_envelope(self, envelopes, native, neutral)
+function envelope = create_stability_envelope(self, envelopes, native, neutral)
     arguments
         self
         envelopes

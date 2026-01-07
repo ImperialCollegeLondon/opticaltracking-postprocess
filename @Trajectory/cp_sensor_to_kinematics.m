@@ -3,9 +3,23 @@ function self = cp_sensor_to_kinematics(self, sensor_names)
         self Trajectory
         sensor_names = []
     end
+    sensors = {self.Sensors};
+    for s = 1:numel(sensors)
+        if isempty(sensors{s})
+            continue
+        end
+        list_sensors{s} = fields(sensors{s});
+    end
+    all_sensors = vertcat(list_sensors{:});
+    all_sensor_names = string(unique(all_sensors));
+
     for t = 1:numel(self)
         sensors = self(t).Sensors;
         if isempty(sensors)
+            for s = 1:numel(all_sensor_names)
+                sensor_name = all_sensor_names{s};
+                self(t).Kinematics.(sensor_name) = [];
+            end
             continue
         end
 
