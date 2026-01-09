@@ -33,7 +33,7 @@ for sg = 1:numel(signals)
             for o = 1:numel(DOFs)
                 dof = DOFs{o};
                 y = self.Kinematics.(signal).(state).(loading_condition).mean.(dof);
-                means(s, o) = rms(y, "omitmissing");
+                means(s, o) = mean(y, "omitmissing");
             end
         end
 
@@ -75,7 +75,7 @@ for sg = 1:numel(signals)
                 axis square;
                 xlabel("Flexion angle");
                 ylabel(replace(dof, '_', ' '));
-                title(replace(loading_condition, '_', ' '));
+                title(['Loading condition: ' replace(loading_condition, '_', ' ')]);
             end
             plots.(signal).(loading_condition)(s) = p;
 

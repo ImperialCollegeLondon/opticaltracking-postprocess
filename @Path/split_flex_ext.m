@@ -1,35 +1,35 @@
 function [flex, ext] = split_flex_ext(self)
-    directions = self.Directions;
     states = self.States;
     signals = self.Signals;
     specimens = self.Specimens;
+    loading_conditions = self.LoadingCondition;
+
     flex = self;
     ext = self;
 
     flex.Kinematics = [];
     ext.Kinematics = [];
 
-    for sp = 1:numel(specimens)
-        specimen = specimens(sp);
+    for sg = 1:numel(signals)
+        signal = signals(sg);
         for st = 1:numel(states)
             state = states(st);
-            is_specimen = [self.Kinematics.(state).SpecimenName] == specimen;
+            for lc = 1:numel(loading_conditions)
+                loading_condition = loading_conditions(lc);
+                for sp = 1:numel(specimens)
+                    specimen = specimens(sp);
 
-            for sg = 1:numel(signals)
-                signal = signals(sg);
-                data = [self.Kinematics.(state).Kinematics];
-                try
-                    datum = data(is_specimen).(signal);
-                catch
-                    keyboard
+                    datum = self.Kinematics.(signal).(state).(loading_condition).(specimen);
+
+                    if isempty(datum)
+                        continue
+                    end
+
+                    [~, n] = max(datum.flexion);
+
+                    flex.Kinematics.(signal).(state).(loading_condition).(specimen) = datum(1:n, :);
+                    ext.Kinematics.(signal).(state).(loading_condition).(specimen) = datum(n:end, :);
                 end
-                headers = datum.Properties.VariableNames;
-                is_flexion = strcmpi(headers, 'flexion');
-                flexion = headers{is_flexion};
-                [~, n] = max(flexion);
-
-                flex.Kinematics.(specimen).(state).(signal) = datum(1:n, :);
-                ext.Kinematics.(specimen).(state).(signal) = datum(n:end, :);
             end
         end
     end

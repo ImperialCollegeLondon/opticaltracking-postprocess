@@ -1,4 +1,4 @@
-classdef PathAverage
+classdef PathNormalisedAverage
     properties
         Specimens
         States
@@ -6,9 +6,13 @@ classdef PathAverage
         Signals
         Kinematics
         Root
+        NativeStdev
+        NameNeutral
+        NameNative
+        NameFallback 
     end
     methods
-        function self = PathAverage(paths)
+        function self = PathNormalisedAverage(paths)
             arguments
                 paths
             end
@@ -67,6 +71,10 @@ classdef PathAverage
             self.Signals = paths.Signals;
             self.States = paths.States;
             self.Root = paths.Root;
+            self.NativeStdev = paths.NativeStdev;
+            self.NameNeutral = paths.NameNeutral;
+            self.NameNative = paths.NameNative;
+            self.NameFallback = paths.NameFallback;
         end
     end
 end
