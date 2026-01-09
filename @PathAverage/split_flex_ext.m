@@ -1,4 +1,5 @@
 function [flex, ext] = split_flex_ext(self)
+    error("Not yet implemented")
     directions = self.Directions;
     states = self.States;
     signals = self.Signals;

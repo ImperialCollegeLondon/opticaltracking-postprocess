@@ -5,57 +5,55 @@ classdef SPM
         between_subject
     end
     properties(Access = private)
+        Data
         States
         Specimens
-        Directions
-        Signals
-        Kinematics
+        LoadingConditions
     end
 
     methods
-        function self = SPM(states, directions, specimens, signals, data)
-
+        function self = SPM(data)
+            signals = fields(data);
             for sg = 1:numel(signals)
-                signal = signals(sg);
-                for d = 1:numel(directions)
-                    direction = directions(d);
-                    i = 1;
-                    x = data.(specimens(1)).(states(1)).(direction).(signal);
-                    val = nan(height(x), numel(specimens) * numel(states), width(x));
+                signal = signals{sg};
 
-                    state_list = nan(numel(specimens) * numel(states), 1);
-                    specimen_list = nan(numel(specimens) * numel(states), 1);
-                    for st = 1:numel(states)
-                        state = states(st);
-                        for sp = 1:numel(specimens)
-                            specimen = specimens(sp);
-                            datum = data.(specimen).(state).(direction).(signal);
-                            val(:, i, :) = table2array(datum);
-                            state_list(i) = st-1;
-                            specimen_list(i) = sp-1;
-                            i = i + 1;
-                        end
-                    end
+                if isempty(data.(signal))
+                    continue
+                end
+                states = findgroups([data.(signal).state]);
+                loading_conditions = findgroups([data.(signal).loading_condition]);
+                specimens = findgroups([data.(signal).specimen]);
 
-                    headers = datum.Properties.VariableNames;
-                    for h = 1:numel(headers)
-                        header = headers{h};
-                        self.between_subject.(signal).(direction).(header) = spm1d.stats.anova1(val(:, :, h)', state_list);
-                        spm = spm1d.stats.anova1rm(val(:, :, h)', state_list, specimen_list);
-                        % spm = spm1d.stats.anova1(val(:, :, h)', state_list);
-                        self.within_subject = spm;
-                        self.inference.(signal).(direction).(header) = spm.inference(0.05);
-                    end
+                datum = data.(signal);
+                headers = datum(1).kinematics.Properties.VariableNames;
+                quantised = quantise({datum.kinematics});
+
+                h = min(cellfun(@height, quantised));
+                val = nan(h, numel(unique(specimens)) * numel(unique(states)) * numel(unique(loading_conditions)), numel(headers));
+
+                for i = 1:numel(datum)
+                    arr = table2array(quantised{i});
+                    val(1:size(arr,1), i, 1:size(arr, 2)) = arr;
+                end
+
+                val = fillmissing(val, "makima", "EndValues", "none");
+
+                for h = 1:numel(headers)
+                    header = headers{h};
+                    self.between_subject.(signal).(header) = spm1d.stats.anova2(val(:, :, h)', states, loading_conditions);
+                    spm = spm1d.stats.anova2rm(val(:, :, h)', states, loading_conditions, specimens);
+                    self.inference.(signal).(header) = spm.inference(0.05);
                 end
             end
-
-            self.States = states;
-            self.Specimens = specimens;
-            self.Directions = directions;
-            self.Signals = signals;
-            self.Kinematics = data;
+            for sg = 1:numel(signals)
+                signal = signals{sg};
+                datum = data.(signal);
+                self.Data.(signal) = data;
+                self.States = categories([datum.state]);
+                self.Specimens = categories([datum.specimen]);
+                self.LoadingConditions = categories([datum.loading_condition]);
+            end
         end
-
 
         function o = dunnett(self, control)
             if nargin < 2
@@ -82,16 +80,12 @@ classdef SPM
             o = self.Specimens;
         end
 
-        function o = directions(self)
-            o = self.Directions;
-        end
-
-        function o = signals(self)
-            o = self.Signals;
+        function o = loading_conditions(self)
+            o = self.LoadingConditions;
         end
 
         function o = data(self)
-            o = self.Kinematics;
+            o = self.data;
         end
 
 

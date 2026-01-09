@@ -87,6 +87,8 @@ function output = split_loading_condition(trajectory, envelope, specimen_states)
 
     threshold_valid_run = 1;
 
+    specimen_states = string(specimen_states);
+
     is_direction = cell(size(envelope));
     for row = 1:size(envelope, 1)
         line_curr = envelope(row, :);
@@ -95,11 +97,11 @@ function output = split_loading_condition(trajectory, envelope, specimen_states)
 
             is_direction = contains([trajectory.LoadingCondition], name, "IgnoreCase", true);
             for st = 1:numel(specimen_states)
-                state = specimen_states{st};
+                state = specimen_states(st);
                 is_state = [trajectory.SpecimenState] == state;
                 datum = [trajectory(is_state & is_direction)];
                 if isempty(datum)
-                    output.(specimen_states{st}).(name) = [];
+                    output.(specimen_states(st)).(name) = [];
                     continue
                 end
                 % is_valid = valid_flexion([datum.Kinematics], threshold_valid_run);
@@ -109,14 +111,9 @@ function output = split_loading_condition(trajectory, envelope, specimen_states)
                 % datum = datum(is_valid);
 
                 % output.(specimen_states{st}).(name) = datum(direction(is_valid)).Kinematics;
-                output.(specimen_states{st}).(name) = datum.Kinematics;
+                output.(specimen_states(st)).(name) = [datum.Kinematics];
             end
         end
-    end
-
-    if ~any(is_direction)
-        output = [];
-        return
     end
 
 end
@@ -134,7 +131,7 @@ function o = subtract_neutral(data, neutral)
         for st = 1:numel(states)
             state = states{st};
             is_curr_neutral = ([neutral.SpecimenState] == state) & ([neutral.SpecimenName] == specimen_name);
-            curr_neutral = neutral(is_curr_neutral);
+            curr_neutral = neutral(is_curr_neutral).Kinematics;
             loading_conditions = fieldnames(curr_specimen.(state));
 
             for d = 1:numel(loading_conditions)
@@ -147,24 +144,37 @@ function o = subtract_neutral(data, neutral)
 
                 for sg = 1:numel(signals)
                     signal = signals{sg};
-                    try
-                        is_incomplete_run = ~all(size(datum.(signal)) == size(curr_neutral.Kinematics.(signal)));
-                    catch ME
-                        keyboard
-                    end
-                    if is_incomplete_run
+
+                    if all(cellfun(@isempty, {datum.(signal)}))
                         continue
                     end
-                    o.(specimen_name).(state).(loading_condition).(signal) = datum.(signal) - curr_neutral.Kinematics.(signal);
-                    try
-                        o.(specimen_name).(state).(loading_condition).(signal).flexion = curr_neutral.Kinematics.(signal).flexion;
-                    catch ME
-                        if contains(ME.message, "flexion")
-                            warning("No field called 'flexion'. Expect angles to be all 0!")
-                        else
-                            rethrow ME
+
+                    curr_neutral_datum = {curr_neutral.(signal)};
+                    if ~isscalar(curr_neutral_datum)
+                        error("More than one neutral found for %s", strjoin([curr_neutral(1).SpecimenName, curr_neutral(1).SpecimenState]))
+                    end
+                    d_size = cellfun(@size, {datum.(signal)}, 'UniformOutput', false);
+                    is_same_length = all(vertcat(d_size{:}) == size(curr_neutral_datum{:}), "all");
+
+                    if ~is_same_length
+                        mat = {datum.(signal)};
+                        mat{end+1} =  curr_neutral_datum{:};
+                        quantised = quantise(mat);
+                        curr_neutral.(signal) = quantised{numel(mat)};
+                        quantised(numel(mat)) = [];
+
+                        for n = 1:numel(datum)
+                            datum(n).(signal) = quantised{n};
                         end
                     end
+
+
+                    for n = 1:numel(datum)
+                        o.(specimen_name).(state).(loading_condition)(n).(signal) = datum(n).(signal) - curr_neutral.(signal);
+                        o.(specimen_name).(state).(loading_condition)(n).(signal).flexion = curr_neutral.(signal).flexion;
+                    end
+
+                    % o.(specimen_name).(state).(loading_condition).(signal) = datum.(signal) - curr_neutral.(signal);
                 end
             end
         end
