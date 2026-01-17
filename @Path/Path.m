@@ -36,7 +36,11 @@ classdef Path
                         signals = fields([datum.Kinematics]);
                         for sg = 1:numel(signals)
                             signal = signals{sg};
+                            try
                             self.Kinematics.(signal).(state).(loading_condition).(specimen) = datum.Kinematics.(signal);
+                            catch me
+                                keyboard
+                            end
                         end
                     end
                 end

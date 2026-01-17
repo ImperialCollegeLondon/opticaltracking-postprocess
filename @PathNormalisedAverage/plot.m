@@ -43,25 +43,27 @@ for sg = 1:numel(signals)
                 y = self.Kinematics.(signal).(state).(loading_condition).mean.(dof);
                 y = smoothdata(y, "gaussian", 5);
 
-                % if state == self.NameNative
-                %     y_std = self.NativeStdev.(signal);
-                %     len = min(size(y, 1), size(y_std, 1));
-                %     y_std = y_std(1:len, o);
-                %     y = y(1:len);
-                %     x = x(1:len);
-                %     y_upper = y + y_std;
-                %     y_lower = y - y_std;
-                % 
-                %     peak = find(x == max(x), 1, 'first');
-                %     segments = {1:peak, peak:numel(x)};
-                % 
-                %     for k = 1:numel(segments)
-                %         idx = segments{k};
-                %         fill([x(idx); flipud(x(idx))], [y_upper(idx); flipud(y_lower(idx))], colour, 'FaceAlpha', 0.2, 'EdgeColor', 'none');
-                %     end
-                %     p = plot(nan, nan, 'Color', colour);
-                %     % NameFallback 
-                % else
+                if state == self.NameNative
+                    y_std = self.NativeStdev.(signal);
+                    len = min(size(y, 1), size(y_std, 1));
+                    y_std = y_std(1:len, o);
+                    y = y(1:len);
+                    x = x(1:len);
+                    y_upper = y + y_std;
+                    y_lower = y - y_std;
+
+                    peak = find(x == max(x), 1, 'first');
+                    segments = {1:peak, peak:numel(x)};
+
+                    for k = 1:numel(segments)
+                        idx = segments{k};
+                        fill([x(idx); flipud(x(idx))], [y_upper(idx); flipud(y_lower(idx))], colour, 'FaceAlpha', 0.2, 'EdgeColor', 'none');
+                    end
+                    if loading_condition ~= self.NameNeutral
+                        p = plot(x, y, 'Color', colour);
+                    end
+                    % NameFallback 
+                else
                     p = plot(x, y, 'Color', colour);
 
                     idx = 1:10+2*s:numel(x);
@@ -71,7 +73,7 @@ for sg = 1:numel(signals)
                     elseif s == idx_bottom(:, o)
                         errorbar(x(idx), y(idx), y_std(idx), 0,  'LineStyle', 'none', 'Color', colour*0.7);
                     end
-                % end
+                end
 
 
 

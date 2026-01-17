@@ -27,8 +27,19 @@ function [out, headers] = quantise(data)
     for r = 1:numel(X)
         run = X{r};
         groups = all_groups{r};
-        quantised = accumarray(groups, (1:size(run,1))', [n_rows 1], @(x) {mean(run(x, :), 1)}, {nan(size(headers))});
-        out{r} = array2table(vertcat(quantised{:}), "VariableNames", headers);
+        % quantised = accumarray(groups, (1:size(run,1))', [n_rows 1], @(x) {mean(run(x, :), 1)}, {nan(size(headers))});
+        
+
+        n_samples = size(run, 1);
+
+        S = sparse(groups, 1:n_samples, 1, n_rows, n_samples);
+        counts = full(sum(S, 2));
+
+        quantised = (S * run) ./ counts;
+        quantised(counts == 0, :) = NaN;
+        
+        % out{r} = array2table(vertcat(quantised{:}), "VariableNames", headers);
+        out{r} = array2table(quantised, "VariableNames", headers);
     end
 end
 % function out = quantise(data)
