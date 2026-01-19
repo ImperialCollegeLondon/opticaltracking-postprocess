@@ -10,6 +10,9 @@ loading_conditions = self.LoadingCondition;
 
 for sg = 1:numel(signals)
     signal = signals(sg);
+    if ~ismember(signal, fields(self.Kinematics))
+        continue
+    end
     for lc = 1:numel(loading_conditions)
         loading_condition = loading_conditions(lc);
 
@@ -20,6 +23,9 @@ for sg = 1:numel(signals)
                 state = states(s);
                 colour = colours(s, :);
 
+                if ~ismember(state, fields(self.Kinematics.(signal)))
+                    continue
+                end
                 datum = self.Kinematics.(signal).(state).(loading_condition).(specimen);
                 if isempty(datum)
                     continue

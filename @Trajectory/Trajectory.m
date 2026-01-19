@@ -13,12 +13,14 @@ classdef Trajectory < handle
 
     methods 
         function self = Trajectory(name, state, loading_condition, is_optimised, is_right_knee)
+            if nargin > 0
             self.SpecimenState = string(state);
             % warning("Removing the letter a from all tests. if you see this, you probably want to remove this.")
             self.SpecimenName = replace(string(name), 'a', '');
-            self.LoadingCondition = string(loading_condition);
+            self.LoadingCondition = replace(string(loading_condition), ' ', '_');
             self.IsOptimised = is_optimised;
             self.IsRightKnee = is_right_knee;
+            end
         end
 
         function out = states(self)

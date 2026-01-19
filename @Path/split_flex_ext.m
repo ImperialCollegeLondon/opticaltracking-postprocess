@@ -19,8 +19,11 @@ function [flex, ext] = split_flex_ext(self)
                 for sp = 1:numel(specimens)
                     specimen = specimens(sp);
 
+                    curr_specimens = fields(self.Kinematics.(signal).(state).(loading_condition));
+                    if ~ismember(specimen, curr_specimens)
+                        continue
+                    end
                     datum = self.Kinematics.(signal).(state).(loading_condition).(specimen);
-
                     if isempty(datum)
                         continue
                     end
