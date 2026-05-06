@@ -43,6 +43,7 @@ for sg = 1:numel(signals)
                 y = self.Kinematics.(signal).(state).(loading_condition).mean.(dof);
                 y = smoothdata(y, "gaussian", 5);
 
+                % Shade native
                 if state == self.NameNative
                     y_std = self.NativeStdev.(signal);
                     len = min(size(y, 1), size(y_std, 1));
@@ -60,11 +61,10 @@ for sg = 1:numel(signals)
                         fill([x(idx); flipud(x(idx))], [y_upper(idx); flipud(y_lower(idx))], colour, 'FaceAlpha', 0.2, 'EdgeColor', 'none');
                     end
                     if loading_condition ~= self.NameNeutral
-                        p = plot(x, y, 'Color', colour);
+                        p = plot(x, y, 'Color', colour, 'DisplayName', state_regex_inv(state));
                     end
-                    % NameFallback 
                 else
-                    p = plot(x, y, 'Color', colour);
+                    p = plot(x, y, 'Color', colour, 'DisplayName', state_regex_inv(state));
 
                     idx = 1:10+2*s:numel(x);
                     y_std = self.Kinematics.(signal).(state).(loading_condition).std.(dof);
@@ -74,15 +74,13 @@ for sg = 1:numel(signals)
                         errorbar(x(idx), y(idx), y_std(idx), 0,  'LineStyle', 'none', 'Color', colour*0.7);
                     end
                 end
-
-
+                plots.(signal).(loading_condition)(o, s) = p;
 
                 grid on;
                 axis square;
                 xlabel("Flexion angle");
                 ylabel(replace(dof, '_', ' '));
             end
-            plots.(signal).(loading_condition)(s) = p;
 
         end
         % sgtitle(replace(loading_condition, '_', ' '));
