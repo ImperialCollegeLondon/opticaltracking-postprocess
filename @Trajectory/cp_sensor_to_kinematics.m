@@ -4,6 +4,13 @@ function self = cp_sensor_to_kinematics(self, sensor_names)
         sensor_names = []
     end
     sensors = {self.Sensors};
+
+    if all(cellfun(@isempty, sensors))
+        warning("No sensors detected. No sensor data is being placed within Kinematics.")
+        return
+    end
+
+    list_sensors = cell(size(sensors));
     for s = 1:numel(sensors)
         if isempty(sensors{s})
             continue
