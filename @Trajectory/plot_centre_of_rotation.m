@@ -4,6 +4,7 @@ function plot_centre_of_rotation(self, model_path)
         model_path = [];
     end
 
+    keyboard
     datum = self(6);
 flexion = datum.Kinematics.tibiofemoral.flexion - 87.7191 + 100;
 cor = datum.Transform.centre_of_rotation;
