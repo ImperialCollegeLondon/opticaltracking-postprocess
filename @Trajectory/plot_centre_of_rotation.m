@@ -1,84 +1,30 @@
-function plot_centre_of_rotation(self, model_path)
-    arguments
-        self
-        model_path = [];
-    end
-
-    keyboard
-    datum = self(6);
-flexion = datum.Kinematics.tibiofemoral.flexion - 87.7191 + 100;
-cor = datum.Transform.centre_of_rotation;
+function plot_centre_of_rotation(self)
+keyboard
+datum = self(88);
+origin = datum.Transform.origin;
 direction = datum.Transform.direction;
-n = false(size(flexion));
-n([1 28 32 35]) = true;
+flexion = datum.Kinematics.tibiofemoral.flexion;
+n = [31 37 44 48 53 59 66 77 88];
 
-cor = cor(:, :, n);
-direction = direction(:, :, n)
-flexion = flexion(n, :);
-hold on;
+dx = direction(1, n);
+dy = direction(2, n);
+x0 = origin(1, n);
+y0 = origin(2, n);
 
-for m = 1:size(cor, 3)
-    cx = cor(1, 1, m);
-    cy = cor(2, 1, m);
-    dy = direction(1, 1, m);
-    dx = direction(2, 1, m);
+% x_range = [-50; 60];
+% t = (x_range - x0) ./ dx;  % 2x16
 
-    if cx > 60
-        t = ([-60, cx] - cx) / dx;
-    elseif cx < -60
-        t = ([cx, 60] - cx) / dx;
-    else
-        t = ([-40, cx + 10] - cx) / dx;
-    end
+t = [-60; 60];
+x = x0 + t .* dx;
+y = y0 + t .* dy;           % 2x16
 
-    x_line = cx + dx * t;
-    y_line = cy + dy * t;
-    plot(x_line, y_line, 'r-', 'LineWidth', 1.5);
-    text(x_line(1), y_line(1), sprintf('%.0f°', flexion(m)), ...
-        'FontSize', 8, 'HorizontalAlignment', 'right');
-end
+% plot(x_range .* ones(size(y)), y, 'r-');
+plot(x, y, 'r-');
+% text(x_range(2) .* ones(1, numel(n)), y(2, :), arrayfun(@(x) sprintf('%.0f°', x), flexion(n), UniformOutput=false));
 
-    if isempty(model_path)
-        fp_this = mfilename("fullpath");
-        folder_structure = split(fp_this, filesep);
-        fp_models = fullfile(strjoin(folder_structure(1:end-2), filesep), 'models');
-        models = dir(fp_models);
-        is_right_tibia = contains({models.name}, 'tibia', 'IgnoreCase', true) & contains({models.name}, 'right', 'IgnoreCase', true);
-        fp_right_tibia = models(is_right_tibia);
-        if isempty(fp_right_tibia)
-            error("Missing right tibia model");
-        end
-        fp_right_tibia = fp_right_tibia(1);
-        model_path = fullfile(fp_right_tibia.folder, fp_right_tibia.name);
-    end
+[label_x, end_idx] = max(x, [], 1);
+label_y = y(sub2ind(size(y), end_idx, 1:size(y,2)));
+text(label_x, label_y, arrayfun(@(v) sprintf('%.0f°', v), flexion(n), UniformOutput=false));
 
-    tibia = stlread(model_path);
-    figure;
-    patch('Vertices', tibia.Points, 'Faces', tibia.ConnectivityList, 'FaceColor', '#eadfc3', 'EdgeColor', 'none');
-    camlight; lighting gouraud; axis equal;
-    grid on;  xlabel("x"), ylabel("y"); zlabel("z"); hold on;
-    view(0, 90);
-
-
-    specimens = unique([self.SpecimenName]);
-    states = unique([self.SpecimenState]);
-
-    colours = lines(numel(states));
-    for sp = 1:numel(specimens)
-        figure; hold on;
-        specimen = specimens(sp);
-        for st = 1:numel(states)
-            state = states(st);
-            mask = [self.SpecimenName] == specimen & [self.SpecimenState] == state;
-            transforms = self(mask).Transform;
-            for t = 1:numel(transforms)
-                headers = fields(transforms(t));
-                for h = 1:numel(headers)
-                    header = headers{h};
-
-
-                end
-            end
-        end
-    end
+scatter(x0, y0, 5, 'r', 'filled');
 end
