@@ -13,7 +13,7 @@ function plots = plot(self)
     loading_conditions = unique(loading_conditions_all);
     angles = unique(angles_all);
 
-    colours = lines(numel(loading_conditions));
+    colours = lines(numel(loading_conditions) + 2);
     linestyles = {'-', '--', ':', '-.'};
     markers = {'o', 's', '^', 'd', 'v', 'p', 'h', 'x'};
 
@@ -30,6 +30,7 @@ function plots = plot(self)
             ls = linestyles{mod(st-1, 4) + 1};
             mk = markers{st};
             ls_handles(st) = plot(NaN, NaN, mk, Color='k', MarkerSize=4);
+            % ls_handles(st) = plot(NaN, NaN, [ls mk], Color='k', MarkerSize=4);
         end
 
         for lc = 1:numel(loading_conditions)
@@ -69,6 +70,9 @@ function plots = plot(self)
                 y = y0 + t .* dy;
 
                 % plots = plot(x, y, [ls mk], Color=colour, MarkerSize=4, MarkerIndices=round(linspace(1,size(x,1),5)), HandleVisibility="off");
+    %             semilogx(intersection(1, is_datum), intersection(2, is_datum), mk, ...
+    % Color=colour, MarkerFaceColor=colour, MarkerSize=6, ...
+    % HandleVisibility='off');
                 scatter(intersection(1, is_datum), intersection(2, is_datum), 40, colour, mk, 'filled', HandleVisibility="off");
             axis equal; grid on;
             end

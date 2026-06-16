@@ -9,29 +9,27 @@ classdef CentreOfRotation
     end
 
     methods
-        function self = CentreOfRotation(loading_condition, angle, state, tsTf, tsTorigin)
+        function self = CentreOfRotation(loading_condition, angle, state, oTf)
+            % Uses tsTorigin to calculate the transform from tsTf 
             arguments
                 loading_condition string
                 angle
                 state
-                tsTf (4, 4, :)
-                tsTorigin (4, 4)
+                oTf (4, 4, :) %femur relative to origin (identity matrix)
             end
 
             self.loading_condition = categorical(loading_condition);
             self.angle = angle;
             self.state = categorical(state);
 
-            intersects_with = eye(4);
-
-            if all(isnan(tsTorigin), "all")
+            if all(isnan(oTf), "all")
                 self.intersection = [NaN; NaN];
                 self.direction = [NaN; NaN];
                 self.origin = [NaN; NaN];
                 return
             end
 
-            oTf = tsTorigin \ tsTf; %femur relative to origin (identity matrix)
+            intersects_with = eye(4);
 
             if all(oTf - intersects_with < 1e-5, "all")
                 self.intersection = [0; 0];
