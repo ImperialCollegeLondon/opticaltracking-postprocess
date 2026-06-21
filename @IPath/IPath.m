@@ -1,30 +1,12 @@
-classdef Path < IPath
-    % Acts as a thin wrapper for Trajectory to provide pathing plotting instead of raw data plotting
-    % properties
-    %     Specimen
-    %     State
-    %     LoadingCondition
-    %     Kinematics
-    %     Root
-    % end
-
+classdef IPath
+    properties
+        Specimen
+        State
+        LoadingCondition
+        Kinematics
+        Root
+    end
     methods
-        function self = Path(trajectory)
-            arguments
-                trajectory Trajectory 
-            end
-
-            if numel(trajectory) > 1
-                self = arrayfun(@(t) Path(t), trajectory);
-                return
-            end
-
-            self.Specimen = trajectory.SpecimenName;
-            self.State = trajectory.SpecimenState;
-            self.LoadingCondition = trajectory.LoadingCondition;
-            self.Kinematics = trajectory.Kinematics;
-            self.Root = trajectory.Root;
-        end
         function res = neutral(self, neutral)
             arguments
                 self Path
@@ -53,7 +35,13 @@ classdef Path < IPath
         end
         function o = exclude_specimens(self, specimen)
             o = self;
-            mask = contains([o.Specimen], specimen, "IgnoreCase", true);
+            mask = contains([o.Specimen], specimen);
+            o = o(~mask);
+        end
+
+        function o = exclude_state(self, state)
+            o = self;
+            mask = contains([o.State], state);
             o = o(~mask);
         end
 
@@ -74,7 +62,5 @@ classdef Path < IPath
         function res = loading_conditions(self)
             res = unique([self.LoadingCondition]);
         end
-
     end
 end
-

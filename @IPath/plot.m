@@ -1,7 +1,9 @@
-function plots = plot(self)
-arguments
-    self Path
-end
+function plots = plot(self, DOFs, reordered_states)
+    arguments
+        self IPath
+        DOFs = []
+        reordered_states = []
+    end
 
 loading_conditions = self.loading_conditions();
 states = self.states();
@@ -10,11 +12,16 @@ colours = lines(numel(states));
 
 signals = string(fields([self.Kinematics]));
 
+if ~isempty(reordered_states)
+    states = [string(reordered_states) setdiff(states, reordered_states)];
+end
+
 
 for sg = 1:numel(signals)
     signal = signals(sg);
 
     fig = [];
+    i = 1;
     for sp = 1:numel(specimens)
         specimen = specimens(sp);
 
@@ -25,6 +32,8 @@ for sg = 1:numel(signals)
 
             is_lc = [self.LoadingCondition] == loading_condition;
 
+            fig(i) = figure;
+            i = i + 1;
             for s = 1:numel(states)
                 state = states(s);
                 is_state = [self.State] == state;
@@ -32,8 +41,12 @@ for sg = 1:numel(signals)
 
                 is_datum = is_specimen & is_lc & is_state;
 
-                datum = self(is_datum).Kinematics;
-                if isempty(datum.(signal))
+                datum = self(is_datum);
+                if isempty(datum)
+                    continue
+                end
+                kinematics = datum.Kinematics;
+                if isempty(kinematics)
                     continue
                 end
 
@@ -41,13 +54,18 @@ for sg = 1:numel(signals)
                     fig = figure;
                 end
 
-                dof = datum.(signal).Properties.VariableNames;
-                dof = setdiff(dof, 'flexion');
+                if ~isempty(DOFs)
+                    dof = cellstr(DOFs);
+                else
+                    dof = kinematics.(signal).Properties.VariableNames;
+                    dof = setdiff(dof, 'flexion');
+                end
+
                 for o = 1:numel(dof)
 
                     nexttile(o); hold on;
-                    x = datum.(signal).flexion;
-                    y = datum.(signal).(dof{o});
+                    x = kinematics.(signal).flexion;
+                    y = kinematics.(signal).(dof{o});
                     plots.(signal).(loading_condition).(specimen)(s) = plot(x, y, 'Color', colour);
 
                     grid on;

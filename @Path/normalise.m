@@ -1,10 +1,10 @@
-function path_normalised = normalise(self, neutral, native, fallback)
+function path_normalised = normalise(self, neutral, intact)
     arguments
         self Path
         neutral = "Neutral";
-        native = "Native";
-        fallback = "";
+        intact = "Intact";
     end
 
-    path_normalised = PathNormalised(self, neutral, native, fallback);
+    intact_neutrals = self.neutral(neutral).intact(intact);
+    path_normalised = PathNormalised(self, intact_neutrals);
 end
