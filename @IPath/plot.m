@@ -32,7 +32,9 @@ for sg = 1:numel(signals)
 
             is_lc = [self.LoadingCondition] == loading_condition;
 
-            fig(i) = figure;
+            if numel(loading_conditions) > 1
+                fig(i) = figure;
+            end
             i = i + 1;
             for s = 1:numel(states)
                 state = states(s);
@@ -48,10 +50,6 @@ for sg = 1:numel(signals)
                 kinematics = datum.Kinematics;
                 if isempty(kinematics)
                     continue
-                end
-
-                if isempty(fig)
-                    fig = figure;
                 end
 
                 if ~isempty(DOFs)
