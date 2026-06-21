@@ -26,7 +26,9 @@ function plots = plot(self, DOFs, reordered_states)
 
             means_lc = means(is_lc, :);
 
-            fig(lc) = figure;
+            if numel(loading_conditions) > 1
+                fig(lc) = figure;
+            end
             for st = 1:numel(states)
                 state = states(st);
                 is_state = [self.State] == state;
