@@ -16,8 +16,8 @@ classdef Trajectory < handle
             if nargin > 0
             self.SpecimenState = string(state);
             % warning("Removing the letter a from all tests. if you see this, you probably want to remove this.")
-            self.SpecimenName = replace(string(name), 'a', '');
-            self.LoadingCondition = replace(string(loading_condition), ' ', '_');
+            self.SpecimenName = string(name);
+            self.LoadingCondition = string(loading_condition);
             self.IsOptimised = is_optimised;
             self.IsRightKnee = is_right_knee;
             end
