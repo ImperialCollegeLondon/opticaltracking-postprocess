@@ -1,4 +1,4 @@
-function plots = plot(self, DOFs, reordered_states)
+function plots = plot_by_state(self, DOFs, reordered_states)
     arguments
         self IPathAverage
         DOFs = []
@@ -20,19 +20,17 @@ function plots = plot(self, DOFs, reordered_states)
 
     for sg = 1:numel(signals)
         signal = signals{sg};
-        for lc = 1:numel(loading_conditions)
-            loading_condition = loading_conditions(lc);
-            is_lc = [self.LoadingCondition] == loading_condition;
 
-            means_lc = means(is_lc, :);
+        for st = 1:numel(states)
+            fig(st) = figure;
+            state = states(st);
+            is_state = [self.State] == state;
+            means_st = means(is_state, :);
 
-            if numel(loading_conditions) > 1
-                fig(lc) = figure;
-            end
-            for st = 1:numel(states)
-                state = states(st);
-                is_state = [self.State] == state;
-                colour = colours(st, :);
+            for lc = 1:numel(loading_conditions)
+                loading_condition = loading_conditions(lc);
+                is_lc = [self.LoadingCondition] == loading_condition;
+                colour = colours(lc, :);
                 mask = is_lc & is_state;
 
                 if ~any(mask)
@@ -56,12 +54,12 @@ function plots = plot(self, DOFs, reordered_states)
                     x = datum.flexion;
                     y = datum.(header);
                     y = smoothdata(y, "gaussian", 5);
-                    plots.(signal).(loading_condition)(st) = plot(x, y, 'Color', colour, "DisplayName", state_regex_inv(state));
+                    plots.(signal).(state)(lc) = plot(x, y, 'Color', colour, "DisplayName", state_regex_inv(loading_condition));
 
                     y_std = trajectory.Stdev.(signal).(header);
 
-                    [~, idx_max] = max(means_lc.(header));
-                    [~, idx_min] = min(means_lc.(header));
+                    [~, idx_max] = max(means_st.(header));
+                    [~, idx_min] = min(means_st.(header));
 
                     idx = 1:10+2*st:numel(x);
                     if idx_max == st
@@ -76,12 +74,12 @@ function plots = plot(self, DOFs, reordered_states)
                     grid on;
                 end
             end
-            has_data = ~arrayfun(@(o) isa(o, 'matlab.graphics.GraphicsPlaceholder'), plots.(signal).(loading_condition));
+            has_data = ~arrayfun(@(o) isa(o, 'matlab.graphics.GraphicsPlaceholder'), plots.(signal).(state));
             lg_ax = nexttile(numel(headers) + 1);
             axis(lg_ax, 'off');
 
-            legend(lg_ax, plots.(signal).(loading_condition)(has_data), state_regex_inv(states(has_data)), 'Location', 'northwest');
-            sgtitle(state_regex_inv(loading_condition))
+            legend(lg_ax, plots.(signal).(state)(has_data), state_regex_inv(loading_conditions(has_data)), 'Location', 'northwest');
+            sgtitle(state_regex_inv(state))
         end
     end
 end
@@ -105,16 +103,3 @@ function vals = get_means(self, orientations)
 
     end
 end
-
-    %
-    %     for o = 1:numel(DOFs)
-    %         nexttile(o);
-    %         has_data = ~arrayfun(@(x) isa(x, 'matlab.graphics.GraphicsPlaceholder'), plots.(signal).(loading_condition));
-    %         legend(plots.(signal).(loading_condition)(has_data), state_regex_inv(states(has_data)));
-    %
-    %         path = fullfile(self.Root, 'results', 'plots', loading_condition);
-    %         mkdir(path);
-    %         exportgraphics(ax(o), fullfile(path, [DOFs{o} '.svg']) ,"ContentType", "vector")
-    %     end
-    % end
-    %

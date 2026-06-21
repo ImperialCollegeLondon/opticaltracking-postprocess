@@ -18,10 +18,7 @@ function [flex, ext] = split_flex_ext(self)
 
             [~, i] = max(datum.flexion);
             flex(n).Kinematics.(signal) = datum(1:i, :);
-            flex(n).Stdev.(signal) = self(n).Stdev.(signal)(1:i, :);
-
             ext(n).Kinematics.(signal) = datum(i:end, :);
-            ext(n).Stdev.(signal) = self(n).Stdev.(signal)(1:i, :);
         end
     end
 end
