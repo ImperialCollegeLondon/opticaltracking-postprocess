@@ -11,11 +11,19 @@ classdef Path < IPath
     methods
         function self = Path(trajectory)
             arguments
-                trajectory Trajectory 
+                trajectory Trajectory = Trajectory.empty()
             end
 
+            if nargin == 0
+                return
+            end
             if numel(trajectory) > 1
-                self = arrayfun(@(t) Path(t), trajectory);
+                n = numel(trajectory);
+                self(n) = Path(trajectory(n));   % preallocate by constructing last element
+                for i = 1:n-1
+                    self(i) = Path(trajectory(i));
+                end
+                self = reshape(self, size(trajectory));
                 return
             end
 
