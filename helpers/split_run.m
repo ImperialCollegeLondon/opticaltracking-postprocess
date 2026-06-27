@@ -16,6 +16,7 @@ function full_runs = split_run(input, minima)
     peak_flexion = cellfun(@(x) max(x.(flexion)), runs);
     is_complete_run = peak_flexion > 0.85*max(peak_flexion);
     full_runs = runs(is_complete_run & includes_a_peak);
+
     % 
     
     % 
