@@ -17,9 +17,7 @@ function res = stdev(self)
         end
 
         quantised = quantise(kinematics);
-        tables = cellfun(@table2array, quantised, "UniformOutput", false);
-        stacked = cat(3, tables{:});
-        stacked = fillmissing(stacked, "pchip", "EndValues", "none");
+        stacked = fillmissing(cat(3, quantised{:}), "pchip", "EndValues", "none");
         stdev = std(stacked, 0, 3);
         is_nan = all(isnan(stdev), 2);
         res.(signal) = stdev(~is_nan, :);

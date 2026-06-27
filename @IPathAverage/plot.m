@@ -10,7 +10,7 @@ function plots = plot(self, DOFs, reordered_states)
 
     fig = [];
 
-    signals = fields(self(1).Kinematics);
+    signals = self.signals();
 
     if ~isempty(reordered_states)
         states = [string(reordered_states) setdiff(states, reordered_states)];
