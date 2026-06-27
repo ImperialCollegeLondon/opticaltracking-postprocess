@@ -16,22 +16,23 @@ classdef IPathAverage
             end
 
             loading_conditions = paths.loading_conditions();
-            states = paths.states();
+            states = [paths.State];
+            states_unique = paths.states();
             signals = string(fields([paths.Kinematics]));
 
             i = 1;
 
             % self(numel(loading_conditions) * numel(states)) = IPathAverage();
-            self(numel(loading_conditions) * numel(states)) = feval(class(self));
+            self(numel(loading_conditions) * numel(states_unique)) = feval(class(self));
 
             for lc = 1:numel(loading_conditions)
                 loading_condition = loading_conditions(lc);
 
                 is_lc = [paths.LoadingCondition] == loading_condition;
 
-                for s = 1:numel(states)
-                    state = states(s);
-                    is_state = [paths.State] == state;
+                for s = 1:numel(states_unique)
+                    state = states_unique(s);
+                    is_state = states == state;
 
                     is_datum = is_lc & is_state;
                     if ~any(is_datum)
@@ -53,10 +54,7 @@ classdef IPathAverage
                             continue
                         end
 
-                        tables = quantise(tables);
-                        headers = tables{1}.Properties.VariableNames;
-
-                        tables = cellfun(@table2array, tables, "UniformOutput", false);
+                        [tables, headers] = quantise(tables);
                         if isscalar(numel(tables))
                             stacked = tables{:};
                         else
@@ -64,8 +62,8 @@ classdef IPathAverage
                         end
                         
                         stacked = fillmissing(stacked, "pchip", "EndValues", "none");
-                        avg = mean(stacked, 3);
-                        stdev = std(stacked, 0, 3);
+                        avg = mean(stacked, 3, "omitmissing");
+                        stdev = std(stacked, 0, 3, "omitmissing");
 
                         self(i).Kinematics.(signal) = array2table(avg, "VariableNames", headers);
                         self(i).Stdev.(signal) = array2table(stdev, "VariableNames", headers);
@@ -136,6 +134,12 @@ classdef IPathAverage
 
         function res = loading_conditions(self)
             res = unique([self.LoadingCondition]);
+        end
+        function out = signals(self)
+            kinematics = {self.Kinematics};
+            field_names = cellfun(@fields, kinematics, "UniformOutput", false);
+            all_signals = vertcat(field_names{:});
+            out = string(unique(all_signals));
         end
     end
 end

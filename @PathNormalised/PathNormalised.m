@@ -20,12 +20,16 @@ classdef PathNormalised < IPath
                 self(n).Specimen = path.Specimen;
                 self(n).State = path.State;
                 self(n).LoadingCondition = path.LoadingCondition;
-                self(n).Root = path.Root;
 
                 % Presumably caching is quicker than rechecking every time?
                 if path.Specimen ~= intact_neutral.Specimen
                     is_specimen = [intact_neutrals.Specimen] == path.Specimen;
                     intact_neutral = intact_neutrals(is_specimen);
+
+                    if numel(intact_neutral) > 1
+                        warning("Specimen %s has more than one intact-neutral path. Defaults to using the first. Check it is correct!", intact_neutral(1).Specimen);
+                    end
+                    intact_neutral = intact_neutral(1);
                 end
 
                 signals = fields(path.Kinematics);
@@ -38,9 +42,19 @@ classdef PathNormalised < IPath
                     curr = quantise_runs(kinematics);
                     int_neut = quantise_runs(intact_neutral.Kinematics.(signal));
 
-                    quantised = quantise({curr, int_neut});
-                    quantised_current = fillmissing(quantised{1}, "makima", "EndValue", "none");
-                    quantised_native_neutral = fillmissing(quantised{2}, "makima", "EndValue", "none");
+                    if height(curr) == 1
+                        flex = round(int_neut.flexion) == round(curr.flexion);
+                        quantised_current = curr;
+                        quantised_native_neutral = mean(int_neut(flex, :), 1);
+                    else
+                        [quantised, headers] = quantise({curr, int_neut});
+
+                        quantised_current = fillmissing(quantised{1}, "makima", "EndValue", "none");
+                        quantised_current = array2table(quantised_current, "VariableNames", headers);
+
+                        quantised_native_neutral = fillmissing(quantised{2}, "makima", "EndValue", "none");
+                        quantised_native_neutral = array2table(quantised_native_neutral, "VariableNames", headers);
+                    end
 
                     self(n).Kinematics.(signal) = quantised_current - quantised_native_neutral;
                     self(n).Kinematics.(signal).flexion = quantised_current.flexion;

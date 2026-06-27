@@ -6,6 +6,8 @@ function [out, headers] = quantise(data)
     X = cellfun(@(c) c(all(~isnan(c), 2), :), X, 'UniformOutput', false);
 
     % first = round(cellfun(@(x) x(1, idx_flexion), X));
+    is_empty = cellfun(@isempty, X);
+    X(is_empty) = [];
     first = round(cellfun(@(x) min(x(:, idx_flexion)), X));
     last = round(cellfun(@(x) x(end, idx_flexion), X));
     [peak, peak_idx] = cellfun(@(x) max(x(:, idx_flexion)), X);
@@ -39,7 +41,8 @@ function [out, headers] = quantise(data)
         quantised(counts == 0, :) = NaN;
         
         % out{r} = array2table(vertcat(quantised{:}), "VariableNames", headers);
-        out{r} = array2table(quantised, "VariableNames", headers);
+        % out{r} = array2table(quantised, "VariableNames", headers);
+        out{r} = quantised;
     end
 end
 

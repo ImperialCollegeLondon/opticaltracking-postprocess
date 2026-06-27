@@ -85,11 +85,11 @@ function plots = plot_by_state(self, DOFs, reordered_states)
 end
 
 function vals = get_means(self, orientations)
-    signals = fields(self(1).Kinematics);
+    signals = self.signals();
 
     vals = [];
     for sg = 1:numel(signals)
-        signal = signals{sg};
+        signal = signals(sg);
         kinematics = [self.Kinematics];
         data = {kinematics.(signal)};
 

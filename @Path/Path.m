@@ -5,7 +5,6 @@ classdef Path < IPath
     %     State
     %     LoadingCondition
     %     Kinematics
-    %     Root
     % end
 
     methods
@@ -31,7 +30,6 @@ classdef Path < IPath
             self.State = trajectory.SpecimenState;
             self.LoadingCondition = trajectory.LoadingCondition;
             self.Kinematics = trajectory.Kinematics;
-            self.Root = trajectory.Root;
         end
         function res = neutral(self, neutral)
             arguments
