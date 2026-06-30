@@ -1,4 +1,4 @@
-classdef Trajectory < handle
+classdef Trajectory < handle & matlab.mixin.Copyable
     properties
         SpecimenName
         SpecimenState
@@ -31,13 +31,8 @@ classdef Trajectory < handle
             all_signals = vertcat(field_names{:});
             out = string(unique(all_signals));
         end
-        function out = specimen(self, arg)
-            if nargin > 1
-                self.SpecimenName = arg;
-                out = self;
-            else
-                out = [self.SpecimenName];
-            end
+        function out = specimens(self)
+            out = [self.SpecimenName];
         end
         function out = states(self)
             out = [self.SpecimenState];

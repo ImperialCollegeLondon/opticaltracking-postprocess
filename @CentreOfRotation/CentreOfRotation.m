@@ -1,5 +1,6 @@
 classdef CentreOfRotation
     properties
+        specimen
         loading_condition
         angle
         state
@@ -9,18 +10,24 @@ classdef CentreOfRotation
     end
 
     methods
-        function self = CentreOfRotation(loading_condition, angle, state, oTf)
+        function self = CentreOfRotation(specimen, loading_condition, angle, state, oTf)
             % Uses tsTorigin to calculate the transform from tsTf 
-            arguments
-                loading_condition string
-                angle
-                state
-                oTf (4, 4, :) %femur relative to origin (identity matrix)
+            % arguments
+            %     loading_condition string
+            %     angle
+            %     state
+            %     oTf (4, 4, :) %femur relative to origin (identity matrix)
+            % end
+
+            if nargin == 0
+                return
             end
 
+
+            self.specimen = categorical(specimen);
             self.loading_condition = categorical(loading_condition);
-            self.angle = angle;
             self.state = categorical(state);
+            self.angle = categorical(angle);
 
             if all(isnan(oTf), "all")
                 self.intersection = [NaN; NaN];
