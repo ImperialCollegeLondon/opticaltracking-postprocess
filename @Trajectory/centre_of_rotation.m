@@ -56,10 +56,14 @@ function cor = centre_of_rotation(self, angles, intact, neutral)
         end
 
         fTts = self(n).Transform.fTts;
-        tsTf = pageinv(fTts);
-        tsTf_mean = mean(tsTf, 3, "omitmissing");
+        fTts_mean = mean(fTts, 3, "omitmissing");
+        tsTf_mean = pageinv(fTts_mean);
         % Missing 
-        oTf = oTts(:, :, is_specimen, is_angle) * tsTf_mean;
+        if isempty(tsTf_mean)
+            oTf = [];
+        else
+            oTf = oTts(:, :, is_specimen, is_angle) * tsTf_mean;
+        end
         % if self(n).loading_conditions == neutral && self(n).states == intact
         %     error("This is supposed to be an identity matrix")
         % end
