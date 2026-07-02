@@ -23,23 +23,22 @@ function plots = plot(self, digitisation)
     t = [-60; 60];
 
 
-    i = 0;
     for sp = 1:numel(specimens)
         specimen = specimens(sp);
-        i = i+1;
         is_specimen = specimens_all == specimen;
-        digitisation_spec = digitisation.find(string(specimen));
+        digitisation_spec = digitisation.find(specimen);
         for ang = 1:numel(angles)
             angle = angles(ang);
 
-            sgtitle([specimen angles(ang)]);
             is_angle = angles_all == angle;
 
+            figure;
+            tiledlayout(round(numel(loading_conditions)/2), 2)
             for lc = 1:numel(loading_conditions)
+                nexttile(lc);
+                hold on; grid on;
                 loading_condition = loading_conditions(lc);
                 is_lc = loading_conditions_all == loading_condition;
-
-                fig(i) = figure; hold on;
 
                 for st = 1:numel(states)
                     state = states(st);
@@ -65,37 +64,28 @@ function plots = plot(self, digitisation)
                     x = x0 + t .* dx;
                     y = y0 + t .* dy;
 
-                    plots = plot(mean(x, 2), mean(y, 2), [ls mk], 'Color', colour, 'MarkerSize', 4, 'MarkerIndices', round(linspace(1,size(x,1),5)), 'DisplayName', replace(string(state), '_', ' '));
+                    plots = plot(mean(x, 2), mean(y, 2), [ls mk], 'Color', colour, 'MarkerSize', 4, 'MarkerIndices', round(linspace(1,size(x,1),5)), 'DisplayName', replace(state, '_', ' '));
                     scatter(intersection(1, is_datum), intersection(2, is_datum), 40, colour, mk, 'filled', 'HandleVisibility', "off");
 
                     axis equal;
                     % plots = plot(x, y, [ls mk], 'Color', colour, 'MarkerSize', 4, 'MarkerIndices', round(linspace(1,size(x,1),5)), 'HandleVisibility', "off");
-                    % scatter(intersection(1, is_datum), intersection(2, is_datum), 40, colour, mk, 'filled', 'DisplayName', string(state));
+                    % scatter(intersection(1, is_datum), intersection(2, is_datum), 40, colour, mk, 'filled', 'DisplayName', state);
                 end
+                legend('Location', 'northoutside', 'NumColumns', 4);
                 digitisation_spec.visualise_surfaces();
                 xlabel('\leftarrow Lateral    Medial \rightarrow')
-                ylabel('\leftarrow Posterior    Anterior \rightarrow')
-                xlim([-150 150]);
+                ylabel('\leftarrow Anterior    Posterior \rightarrow')
                 axis equal; grid on;
-                sgtitle([specimen loading_condition])
-                states_clean = replace(string(states), '_', ' ');
-                legend;
-                keyboard
+                xlim([-150 150]);
+                title(replace(loading_condition, '_', ' '));
             end
 
-            % State/colour legend
-
-
-        i = i+1;
+            sgtitle([specimen angles(ang)]);
+            root = fileparts(digitisation(1).filepath);
+            path = fullfile(root, 'results', 'centre_of_rotation');
+            filename = strjoin([specimen, '_', angles(ang), '.svg'], '');
+            exportgraphics(gcf, fullfile(path, filename));
         end
-        i = i+1;
-
-
-
-
-        % [label_x, end_idx] = max(x, [], 1);
-        % label_y = y(sub2ind(size(y), end_idx, 1:size(y,2)));
-        % text(label_x, label_y, arrayfun(@(v) sprintf('%.0f°', v), flexion(n), UniformOutput=false));
     end
 
 end

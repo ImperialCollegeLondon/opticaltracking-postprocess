@@ -24,10 +24,10 @@ classdef CentreOfRotation
             end
 
 
-            self.specimen = categorical(specimen);
-            self.loading_condition = categorical(loading_condition);
-            self.state = categorical(state);
-            self.angle = categorical(angle);
+            self.specimen = specimen;
+            self.loading_condition = loading_condition;
+            self.state = state;
+            self.angle = angle;
 
             if all(isnan(oTf), "all")
                 self.intersection = [NaN; NaN];
