@@ -32,10 +32,9 @@ function plots = plot(self, digitisation)
 
             is_angle = angles_all == angle;
 
-            figure;
-            tiledlayout(round(numel(loading_conditions)/2), 2)
+            % tiledlayout(round(numel(loading_conditions)/2), 2)
             for lc = 1:numel(loading_conditions)
-                nexttile(lc);
+                figure;
                 hold on; grid on;
                 loading_condition = loading_conditions(lc);
                 is_lc = loading_conditions_all == loading_condition;
@@ -78,13 +77,16 @@ function plots = plot(self, digitisation)
                 axis equal; grid on;
                 xlim([-150 150]);
                 title(replace(loading_condition, '_', ' '));
+                sgtitle([specimen string(angles(ang))]);
+
+
+                root = fileparts(digitisation(1).filepath);
+                path = fullfile(root, 'results', 'centre_of_rotation', loading_condition);
+                mkdir(path)
+                filename = strjoin([specimen, '_', string(angles(ang)), '.png'], '');
+                exportgraphics(gcf, fullfile(path, filename));
             end
 
-            sgtitle([specimen angles(ang)]);
-            root = fileparts(digitisation(1).filepath);
-            path = fullfile(root, 'results', 'centre_of_rotation');
-            filename = strjoin([specimen, '_', angles(ang), '.svg'], '');
-            exportgraphics(gcf, fullfile(path, filename));
         end
     end
 
