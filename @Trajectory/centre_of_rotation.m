@@ -140,6 +140,6 @@ function cor = centre_of_rotation(self, angles, intact, neutral)
         % if self(n).loading_conditions == neutral && self(n).states == intact
         %     error("This is supposed to be an identity matrix")
         % end
-        cor(n) = CentreOfRotation(self(n).specimens, self(n).loading_conditions, angles(n), self(n).states, oTf);
+        cor(n) = CentreOfRotation(self(n).specimens, self(n).loading_conditions, angles(n), self(n).states, oTf, self(n).IsRightKnee);
     end
 end

@@ -2,6 +2,7 @@ classdef CentreOfRotation
     properties
         specimen
         loading_condition
+        is_right_knee
         angle
         state
         direction
@@ -10,7 +11,7 @@ classdef CentreOfRotation
     end
 
     methods
-        function self = CentreOfRotation(specimen, loading_condition, angle, state, oTf)
+        function self = CentreOfRotation(specimen, loading_condition, angle, state, oTf, is_right_knee)
             % Uses tsTorigin to calculate the transform from tsTf 
             % arguments
             %     loading_condition string
@@ -28,6 +29,7 @@ classdef CentreOfRotation
             self.loading_condition = loading_condition;
             self.state = state;
             self.angle = angle;
+            self.is_right_knee = is_right_knee;
 
             if all(isnan(oTf), "all")
                 self.intersection = [NaN; NaN];

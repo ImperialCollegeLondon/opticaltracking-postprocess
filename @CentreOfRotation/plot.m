@@ -72,12 +72,18 @@ function plots = plot(self, digitisation)
                 end
                 legend('Location', 'northoutside', 'NumColumns', 4);
                 digitisation_spec.visualise_surfaces();
-                xlabel('\leftarrow Lateral    Medial \rightarrow')
+                xlabel('\leftarrow Medial    Lateral \rightarrow')
                 ylabel('\leftarrow Anterior    Posterior \rightarrow')
                 axis equal; grid on;
                 xlim([-150 150]);
                 title(replace(loading_condition, '_', ' '));
-                sgtitle([specimen string(angles(ang))]);
+
+                if digitisation_spec.is_right_knee
+                    txt = 'Right';
+                else
+                    txt = 'Left';
+                end
+                sgtitle([strjoin([specimen, txt], ' '), strjoin([string(angles(ang)) 'degrees'], ' ')]);
 
 
                 root = fileparts(digitisation(1).filepath);

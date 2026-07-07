@@ -1,7 +1,8 @@
-function plots = plot(self, model)
+function plots = plot(self, model, root)
     arguments
         self CentreOfRotationAverage
         model triangulation
+        root
     end
     direction = [self.direction];
     origin = [self.origin];
@@ -27,10 +28,10 @@ function plots = plot(self, model)
 
         is_angle = angles_all == angle;
 
-        figure;
-        tiledlayout(round(numel(loading_conditions)/2), 2)
+        % tiledlayout(round(numel(loading_conditions)/2), 2)
         for lc = 1:numel(loading_conditions)
-            nexttile(lc);
+            figure;
+            % nexttile(lc);
             hold on; grid on;
             loading_condition = loading_conditions(lc);
             is_lc = loading_conditions_all == loading_condition;
@@ -68,20 +69,21 @@ function plots = plot(self, model)
             legend('Location', 'northoutside', 'NumColumns', 4);
 
             place_model(model);
-            xlabel('\leftarrow Lateral    Medial \rightarrow')
+
+            xlabel('\leftarrow Medial    Lateral \rightarrow')
             ylabel('\leftarrow Anterior    Posterior \rightarrow')
             axis equal; grid on;
             xlim([-150 150]);
             title(replace(loading_condition, '_', ' '));
+
+            sgtitle(strjoin([string(angles(ang)) 'degrees'], ' '));
+
+            path = fullfile(root, 'results', 'cor_average', string(angles(ang)));
+            mkdir(path)
+            filename = strjoin([loading_condition, '.png'], '');
+            exportgraphics(gcf, fullfile(path, filename));
         end
 
-
-        keyboard
-        sgtitle(strjoin([angles(ang) 'degrees'], ' '));
-        root = fileparts(digitisation(1).filepath);
-        path = fullfile(root, 'results', 'centre_of_rotation');
-        filename = strjoin([angles(ang), 'degrees', '.svg'], '');
-        exportgraphics(gcf, fullfile(path, filename));
     end
 end
 
@@ -89,7 +91,7 @@ end
 function place_model(model)
     patch('Vertices', model.Points, 'Faces', model.ConnectivityList, 'FaceColor', '#eadfc3', 'EdgeColor', 'none', 'HandleVisibility', 'off');
     zlim([-100, 5])
-    camlight
+    camlight("right", "infinite");
     % shape = alphaShape(model.Points);
     % plot(shape, EdgeAlpha=0.1)
 end
