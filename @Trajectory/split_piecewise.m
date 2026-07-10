@@ -4,6 +4,11 @@ function split_trajectories = split_piecewise(self, assignments)
         assignments Assignments
     end
 
+    if isempty(self)
+        split_trajectories = self;
+        return
+    end
+
     % Find preallocation size
     has_conditions_to_split = ismember([self.LoadingCondition], string([assignments.ends_with]));
     prealloc_size = sum(has_conditions_to_split + 1);
