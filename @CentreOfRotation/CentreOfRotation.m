@@ -1,6 +1,8 @@
 classdef CentreOfRotation
     properties
+        specimen
         loading_condition
+        is_right_knee
         angle
         state
         direction
@@ -9,18 +11,25 @@ classdef CentreOfRotation
     end
 
     methods
-        function self = CentreOfRotation(loading_condition, angle, state, oTf)
+        function self = CentreOfRotation(specimen, loading_condition, angle, state, oTf, is_right_knee)
             % Uses tsTorigin to calculate the transform from tsTf 
-            arguments
-                loading_condition string
-                angle
-                state
-                oTf (4, 4, :) %femur relative to origin (identity matrix)
+            % arguments
+            %     loading_condition string
+            %     angle
+            %     state
+            %     oTf (4, 4, :) %femur relative to origin (identity matrix)
+            % end
+
+            if nargin == 0
+                return
             end
 
-            self.loading_condition = categorical(loading_condition);
+
+            self.specimen = specimen;
+            self.loading_condition = loading_condition;
+            self.state = state;
             self.angle = angle;
-            self.state = categorical(state);
+            self.is_right_knee = is_right_knee;
 
             if all(isnan(oTf), "all")
                 self.intersection = [NaN; NaN];
@@ -58,36 +67,6 @@ classdef CentreOfRotation
             self.intersection = d1*t + p1;
             self.direction = d1;
             self.origin = p1;
-
-
-
-% origin = datum.Transform.origin;
-% direction = datum.Transform.direction;
-% flexion = datum.Kinematics.tibiofemoral.flexion;
-% n = [31 37 44 48 53 59 66 77 88];
-%
-% dx = direction(1, n);
-% dy = direction(2, n);
-% x0 = origin(1, n);
-% y0 = origin(2, n);
-%
-% % x_range = [-50; 60];
-% % t = (x_range - x0) ./ dx;  % 2x16
-%
-% t = [-60; 60];
-% x = x0 + t .* dx;
-% y = y0 + t .* dy;           % 2x16
-%
-% % plot(x_range .* ones(size(y)), y, 'r-');
-% plot(x, y, 'r-');
-% % text(x_range(2) .* ones(1, numel(n)), y(2, :), arrayfun(@(x) sprintf('%.0f°', x), flexion(n), UniformOutput=false));
-%
-% [label_x, end_idx] = max(x, [], 1);
-% label_y = y(sub2ind(size(y), end_idx, 1:size(y,2)));
-% text(label_x, label_y, arrayfun(@(v) sprintf('%.0f°', v), flexion(n), UniformOutput=false));
-%
-% scatter(x0, y0, 5, 'r', 'filled');
-% end
 
         end
     end

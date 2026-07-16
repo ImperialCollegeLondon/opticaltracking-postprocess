@@ -19,7 +19,7 @@ function fig = plot(self, highlight_idx)
             headers = datum.Properties.VariableNames;
             figure;
             fig(t) = tiledlayout(round(numel(headers)/2), 2);
-            sgtitle([[self(t).SpecimenName ' ' replace(self(t).SpecimenState, '_', ' ') ' ' replace(self(t).loading_condition, '_', ' ')] signals(sg)]);
+            sgtitle([strjoin([self(t).SpecimenName ' ' replace(self(t).SpecimenState, '_', ' ')], ' '),  replace(self(t).LoadingCondition, '_', ' '), signals(sg)]);
             for h = 1:numel(headers)
                 % Plot data
                 nexttile(h);
