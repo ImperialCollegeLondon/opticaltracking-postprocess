@@ -27,6 +27,7 @@ function plots = plot(self, digitisation)
         specimen = specimens(sp);
         is_specimen = specimens_all == specimen;
         digitisation_spec = digitisation.find(specimen);
+        width = digitisation_spec.transforms.tibia.width.unwrap();
         for ang = 1:numel(angles)
             angle = angles(ang);
 

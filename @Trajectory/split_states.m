@@ -3,6 +3,13 @@ function [trajectories, secondary_arr] = split_states(self, str)
         self Trajectory
         str = "_COR"
     end
+
+    if isempty(self)
+        trajectories = self;
+        secondary_arr = [];
+        return
+    end
+
     trajectories = copy(self);
     words = split(self.states, str);
     states = words(:, :, 1);
