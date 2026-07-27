@@ -13,11 +13,19 @@ colours = lines(numel(states));
 linestyles = {'-', '--', ':', '-.'};
 markers = {'o', 's', '^', 'd', 'v', 'p', 'h', 'x'};
 
-signals = string(fields([self.Kinematics]));
+kinematics_all = [self.Kinematics];
+signals = string(fields(kinematics_all));
 
 if ~isempty(reordered_states)
     states = [string(reordered_states) setdiff(states, reordered_states)];
 end
+
+for sg = 1:numel(signals)
+vals.(signals(sg)) = vertcat(kinematics_all.(signals(sg)));
+maxima.(signals(sg)) = max(vals.(signals(sg)));
+minima.(signals(sg)) = min(vals.(signals(sg)));
+end
+
 
 
 for sg = 1:numel(signals)
@@ -35,7 +43,7 @@ for sg = 1:numel(signals)
 
             is_lc = [self.LoadingCondition] == loading_condition;
 
-            if numel(loading_conditions) > 1
+            if ~isempty(vals.(signal)) && numel(loading_conditions) > 1 
                 fig(i) = figure;
             end
             i = i + 1;
@@ -70,12 +78,10 @@ for sg = 1:numel(signals)
                     nexttile(o); hold on;
                     x = kinematics.(signal).flexion;
                     y = kinematics.(signal).(dof{o});
-                    try
                     plots.(signal).(loading_condition).(specimen)(s) = plot(x, y, [ls mk], 'Color', colour, 'MarkerIndices', 1:10:numel(x));
-                    catch me
-                        keyboard
-                    end
 
+                    xlim(1.1*[minima.(signal).flexion maxima.(signal).flexion])
+                    ylim(1.1*[minima.(signal).(dof{o}) maxima.(signal).(dof{o})])
                     grid on;
                     axis square;
                     xlabel("Flexion angle");
@@ -83,7 +89,7 @@ for sg = 1:numel(signals)
                 end
             end
             if ~isempty(fig)
-                sgtitle([specimen loading_condition replace(signal, '_', ' ')]);
+                sgtitle([specimen replace(loading_condition, '_', ' ') replace(signal, '_', ' ')]);
                 try
                 has_data = ~arrayfun(@(o) isa(o, 'matlab.graphics.GraphicsPlaceholder'), plots.(signal).(loading_condition).(specimen));
                 catch
@@ -96,9 +102,9 @@ for sg = 1:numel(signals)
                 legend(lg_ax, plots.(signal).(loading_condition).(specimen)(has_data), state_regex_inv(states(has_data)), 'Location', 'northwest');
 
                 if ~isempty(root)
-                    path = fullfile(root, 'results', 'kinematics', signal, loading_condition);
+                    path = fullfile(root, 'results', 'kinematics', signal, specimen);
                     mkdir(path)
-                    filename = strjoin([specimen, '.png'], '');
+                    filename = strjoin([loading_condition, '.png'], '');
                     exportgraphics(gcf, fullfile(path, filename));
                 end
             end
