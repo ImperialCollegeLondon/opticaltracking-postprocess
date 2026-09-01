@@ -38,9 +38,9 @@ function plots = plot(self, model, root)
 
             for st = 1:numel(states)
                 state = states(st);
-                if state == "Intact"
-                    keyboard
-                end
+                % if state == "Intact"
+                %     keyboard
+                % end
                 is_state = states_all == state;
 
                 % Create styles

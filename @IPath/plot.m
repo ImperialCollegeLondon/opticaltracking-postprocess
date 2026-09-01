@@ -20,11 +20,11 @@ if ~isempty(reordered_states)
     states = [string(reordered_states) setdiff(states, reordered_states)];
 end
 
-for sg = 1:numel(signals)
-vals.(signals(sg)) = vertcat(kinematics_all.(signals(sg)));
-maxima.(signals(sg)) = max(vals.(signals(sg)));
-minima.(signals(sg)) = min(vals.(signals(sg)));
-end
+% for sg = 1:numel(signals)
+% vals.(signals(sg)) = vertcat(kinematics_all.(signals(sg)));
+% maxima.(signals(sg)) = max(vals.(signals(sg)));
+% minima.(signals(sg)) = min(vals.(signals(sg)));
+% end
 
 
 
@@ -43,7 +43,8 @@ for sg = 1:numel(signals)
 
             is_lc = [self.LoadingCondition] == loading_condition;
 
-            if ~isempty(vals.(signal)) && numel(loading_conditions) > 1 
+            % if ~isempty(vals.(signal)) && numel(loading_conditions) > 1 
+            if numel(loading_conditions) > 1
                 fig(i) = figure;
             end
             i = i + 1;
@@ -80,8 +81,8 @@ for sg = 1:numel(signals)
                     y = kinematics.(signal).(dof{o});
                     plots.(signal).(loading_condition).(specimen)(s) = plot(x, y, [ls mk], 'Color', colour, 'MarkerIndices', 1:10:numel(x));
 
-                    xlim(1.1*[minima.(signal).flexion maxima.(signal).flexion])
-                    ylim(1.1*[minima.(signal).(dof{o}) maxima.(signal).(dof{o})])
+                    % xlim(1.1*[minima.(signal).flexion maxima.(signal).flexion])
+                    % ylim(1.1*[minima.(signal).(dof{o}) maxima.(signal).(dof{o})])
                     grid on;
                     axis square;
                     xlabel("Flexion angle");
