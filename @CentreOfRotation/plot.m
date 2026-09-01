@@ -88,9 +88,9 @@ function plots = plot(self, digitisation)
 
 
                 root = fileparts(digitisation(1).filepath);
-                path = fullfile(root, 'results', 'centre_of_rotation', loading_condition);
+                path = fullfile(root, 'results', 'centre_of_rotation', string(angles(ang)), specimen);
                 mkdir(path)
-                filename = strjoin([specimen, '_', string(angles(ang)), '.png'], '');
+                filename = strjoin([loading_condition, '.png'], '');
                 exportgraphics(gcf, fullfile(path, filename));
             end
 

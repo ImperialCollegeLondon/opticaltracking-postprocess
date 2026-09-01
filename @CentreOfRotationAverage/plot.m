@@ -20,7 +20,7 @@ function plots = plot(self, model, root)
     linestyles = {'-', '--', ':', '-.'};
     markers = {'o', 's', '^', 'd', 'v', 'p', 'h', 'x'};
 
-    t = [-60; 60];
+    t = [-1; 1];
 
 
     for ang = 1:numel(angles)
@@ -38,6 +38,9 @@ function plots = plot(self, model, root)
 
             for st = 1:numel(states)
                 state = states(st);
+                % if state == "Intact"
+                %     keyboard
+                % end
                 is_state = states_all == state;
 
                 % Create styles
@@ -73,7 +76,7 @@ function plots = plot(self, model, root)
             xlabel('\leftarrow Medial    Lateral \rightarrow')
             ylabel('\leftarrow Anterior    Posterior \rightarrow')
             axis equal; grid on;
-            xlim([-150 150]);
+            xlim([-2 2]);
             title(replace(loading_condition, '_', ' '));
 
             sgtitle(strjoin([string(angles(ang)) 'degrees'], ' '));

@@ -1,0 +1,8 @@
+{
+    "Trajectory.save_to_file": {
+        "inputs": [
+            {"name": "selves", "kind": "required", "type": "Trajectory"},
+            {"name": "root", "kind": "required", "type": "folder"}
+        ]
+    }
+}
